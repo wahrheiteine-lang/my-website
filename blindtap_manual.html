@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>BLINDTAP — 取扱説明書</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;0,900;1,400&family=Roboto+Mono:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;700&display=swap');
+
+:root {
+  --bg:     #0a0a0a;
+  --bg2:    #0f0f0f;
+  --bg3:    #141414;
+  --border: #222;
+  --accent: #e8ff00;
+  --hot:    #ff3030;
+  --blue:   #3090ff;
+  --text:   #ffffff;
+  --muted:  #888;
+  --dim:    #444;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ===== NOISE TEXTURE OVERLAY ===== */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity: 0.4;
+}
+
+/* ===== STICKY NAV ===== */
+.toc-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,10,10,0.95);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+  display: flex; align-items: center;
+  padding: 0 16px; gap: 0;
+  overflow-x: auto; scrollbar-width:none;
+}
+.toc-nav::-webkit-scrollbar { display:none; }
+.toc-nav a {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700; font-size: 9px;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--dim); text-decoration: none;
+  padding: 14px 12px; white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.toc-nav a:hover { color: var(--text); }
+.toc-nav a.active { color: var(--accent); border-color: var(--accent); }
+
+/* ===== HERO ===== */
+.hero {
+  position: relative; z-index:1;
+  padding: 60px 24px 48px;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+.hero::after {
+  content:'';
+  position:absolute; top:-40px; right:-60px;
+  width:300px; height:300px;
+  background: radial-gradient(circle, rgba(232,255,0,0.06) 0%, transparent 70%);
+  pointer-events:none;
+}
+.hero-eyebrow {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 4px; color: var(--accent);
+  margin-bottom: 12px;
+}
+.hero-logo {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 900; font-size: 52px;
+  letter-spacing: 8px; color: var(--accent);
+  line-height: 1; margin-bottom: 6px;
+}
+.hero-sub {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300; font-size: 13px;
+  letter-spacing: 4px; color: var(--muted);
+  text-transform: uppercase; margin-bottom: 24px;
+}
+.hero-desc {
+  font-size: 14px; color: #aaa; max-width: 340px; line-height: 1.8;
+}
+.version-badge {
+  display: inline-block; margin-top: 20px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 9px; font-weight: 700; letter-spacing: 2px;
+  padding: 4px 10px; border: 1px solid var(--dim);
+  color: var(--dim);
+}
+
+/* ===== SECTION ===== */
+.section {
+  position: relative; z-index:1;
+  padding: 48px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.section-header {
+  display: flex; align-items: baseline; gap: 12px;
+  margin-bottom: 32px;
+}
+.section-num {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 2px; color: var(--accent);
+}
+.section-title {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 900; font-size: 22px;
+  letter-spacing: 3px; text-transform: uppercase;
+}
+.section-lead {
+  font-size: 13px; color: #bbb;
+  margin-bottom: 28px; line-height: 1.9;
+}
+
+/* ===== PHONE MOCKUP ===== */
+.phone-wrap {
+  display: flex; justify-content: center;
+  margin: 0 auto 8px; position: relative;
+}
+.phone {
+  width: 240px;
+  background: #0a0a0a;
+  border: 1.5px solid #2a2a2a;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px #111, 0 20px 60px rgba(0,0,0,0.8);
+  position: relative;
+  flex-shrink: 0;
+}
+.phone-notch {
+  height: 24px; background: #0a0a0a;
+  display: flex; align-items: center; justify-content: center;
+}
+.phone-notch-pill {
+  width: 60px; height: 8px;
+  background: #1a1a1a; border-radius: 4px;
+}
+.phone-screen {
+  background: #0a0a0a;
+}
+
+/* ===== UI COMPONENTS (mockup内) ===== */
+.ui-datetime {
+  text-align: center; padding: 5px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 8px; color: #fff; letter-spacing: 1px;
+}
+.ui-header {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 4px 10px 6px;
+  border-bottom: 1px solid #1e1e1e;
+}
+.ui-logo {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 900; font-size: 10px;
+  letter-spacing: 3px; color: var(--accent);
+}
+.ui-tabs { display: flex; gap: 3px; }
+.ui-tab {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700; font-size: 7px;
+  letter-spacing: 1px; padding: 3px 7px;
+  border: 1px solid #2a2a2a; color: #666;
+  border-radius: 2px;
+}
+.ui-tab.active { background: var(--accent); color: #000; border-color: var(--accent); }
+.ui-icons { display:flex; gap:4px; font-size:9px; color:#555; }
+
+.ui-delta {
+  display: flex; align-items: center;
+  padding: 6px 10px; background: #0d0d0d;
+  border-bottom: 1px solid #1a1a1a;
+  gap: 6px;
+}
+.ui-delta-mode {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 900; font-size: 8px;
+  color: var(--accent); letter-spacing: 1px;
+}
+.ui-delta-target {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 9px; color: var(--accent);
+  border-bottom: 1px solid #333; padding-bottom:1px;
+}
+.ui-lap-count {
+  font-size: 7px; color: #666; letter-spacing:1px;
+  margin-left: auto; font-weight:700;
+}
+
+.ui-laplist {
+  padding: 4px 10px;
+}
+.ui-lap-row {
+  display: flex; align-items:center;
+  padding: 5px 0; border-bottom: 1px solid #111;
+  gap: 5px;
+}
+.ui-lap-num { font-size:7px; color:#555; width:12px; text-align:right; }
+.ui-lap-time {
+  font-family: 'Roboto Mono', monospace;
+  font-weight:700; font-size:12px; flex:1;
+}
+.ui-lap-delta {
+  font-family: 'Roboto Mono', monospace;
+  font-size:8px; font-weight:600;
+}
+.ui-lap-badge {
+  font-size:6px; font-weight:700;
+  padding:1px 4px; border-radius:1px;
+}
+.best .ui-lap-time { color: var(--hot); }
+.best .ui-lap-badge { background:var(--hot); color:#fff; }
+.slow .ui-lap-time { color: var(--blue); }
+.slow .ui-lap-badge { background:var(--blue); color:#fff; }
+.red { color:var(--hot); }
+.green { color:#44ee77; }
+
+.ui-tapzone {
+  background: #141414;
+  display: flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding: 16px 10px 12px;
+  border-top: 2px solid #222;
+  position: relative;
+  gap: 4px;
+}
+.ui-tapzone-time {
+  font-family: 'Roboto Mono', monospace;
+  font-weight:700; font-size:28px;
+  color: var(--accent); line-height:1;
+  letter-spacing:0;
+}
+.ui-tapzone-delta {
+  font-family: 'Roboto Mono', monospace;
+  font-size:11px; font-weight:600;
+}
+.ui-tapzone-label {
+  font-family: 'Roboto', sans-serif;
+  font-weight:700; font-size:7px;
+  letter-spacing:3px; color:#555;
+}
+.ui-tapzone-hint {
+  font-size:6px; color:#333; letter-spacing:2px; font-weight:700;
+}
+.ui-btn-row {
+  display:flex; gap:1px;
+}
+.ui-btn {
+  flex:1; padding:7px; text-align:center;
+  background:#0d0d0d; border-top:1px solid #1e1e1e;
+  font-family:'Roboto',sans-serif; font-weight:700;
+  font-size:8px; letter-spacing:2px; color:#555;
+}
+.ui-btn.reset-only { color: var(--hot); }
+
+/* Timer mockup specific */
+.ui-seq-list { padding:0; }
+.ui-seq-item {
+  display:flex; align-items:center;
+  padding:5px 10px; border-bottom:1px solid #111;
+  gap:5px;
+}
+.ui-seq-num { font-size:7px; color:#555; }
+.ui-seq-name {
+  flex:1; font-family:'Noto Sans JP',sans-serif;
+  font-size:9px; color:#ccc;
+}
+.ui-seq-time {
+  font-family:'Roboto Mono',monospace;
+  font-size:9px; font-weight:700; color:var(--accent);
+}
+.ui-seq-add {
+  text-align:center; padding:5px;
+  font-size:7px; color:#444; letter-spacing:1px;
+  border-top:1px solid #111;
+}
+.ui-timer-tap {
+  background:#141414; border-top:2px solid #222;
+  padding:12px 10px 10px;
+  display:flex; flex-direction:column;
+  align-items:center; gap:5px;
+  position:relative;
+}
+.ui-presets {
+  display:flex; gap:3px; width:100%;
+}
+.ui-preset-btn {
+  flex:1; padding:3px 1px; text-align:center;
+  background:rgba(255,255,255,0.04);
+  border:1px solid #2a2a2a; border-radius:2px;
+  font-family:'Roboto',sans-serif; font-weight:700;
+  font-size:7px; color:#666;
+}
+.ui-preset-btn.sel {
+  background:var(--accent); color:#000; border-color:var(--accent);
+}
+.ui-timer-time {
+  font-family:'Roboto Mono',monospace;
+  font-weight:700; font-size:28px;
+  color:var(--accent); line-height:1; text-align:center;
+}
+.ui-timer-time.dim { color:#2a2a2a; }
+.ui-seq-toggle {
+  display:flex; align-items:center; gap:5px;
+  padding:5px 12px; border:1px solid #333; border-radius:3px;
+  font-size:8px; color:#555; font-weight:700; letter-spacing:1px;
+}
+.ui-seq-toggle.on { border-color:var(--accent); color:var(--accent); background:rgba(232,255,0,0.06); }
+.ui-seq-dot { width:5px; height:5px; border-radius:50%; background:#333; }
+.ui-seq-dot.on { background:var(--accent); }
+.ui-tapzone-hint-timer { font-size:6px; color:#333; letter-spacing:2px; }
+.ui-tapzone-label-timer { font-size:8px; color:#888; letter-spacing:1px; }
+
+/* ===== CALLOUT SYSTEM ===== */
+.diagram-wrap {
+  position: relative;
+  margin: 0 auto;
+  max-width: 380px;
+}
+.callout {
+  position: absolute;
+  font-family: 'Roboto', sans-serif;
+  font-size: 10px; font-weight: 700;
+  line-height: 1.4;
+  z-index: 10;
+}
+/* 右向き吹き出し */
+.callout.right {
+  left: calc(50% + 130px);
+  display: flex; align-items: center; gap: 6px;
+}
+.callout.right .cb-line {
+  width: 24px; height: 1px;
+  background: var(--accent); flex-shrink:0;
+}
+.callout.right .cb-dot {
+  position: absolute; left: -4px;
+  width:6px; height:6px; border-radius:50%;
+  background:var(--accent); flex-shrink:0;
+  top:50%; transform:translateY(-50%);
+}
+.callout.right .cb-text {
+  color: var(--accent);
+  white-space: nowrap;
+}
+/* 左向き吹き出し */
+.callout.left {
+  right: calc(50% + 130px);
+  display: flex; align-items: center; gap: 6px;
+  flex-direction: row-reverse;
+}
+.callout.left .cb-line {
+  width: 24px; height: 1px;
+  background: var(--accent); flex-shrink:0;
+}
+.callout.left .cb-text {
+  color: var(--accent);
+  white-space: nowrap; text-align: right;
+}
+
+/* 吹き出しの繋ぎ線（SVG方式） */
+.callout-svg {
+  position:absolute; top:0; left:0;
+  width:100%; height:100%;
+  pointer-events:none; z-index:5;
+}
+
+/* ===== INFO BOXES ===== */
+.info-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; margin-bottom: 24px;
+}
+.info-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 14px;
+}
+.info-card-icon { font-size: 20px; margin-bottom:8px; }
+.info-card-title {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700; font-size: 10px;
+  letter-spacing: 2px; color: var(--accent);
+  margin-bottom: 5px;
+}
+.info-card-body { font-size: 11px; color: #999; line-height: 1.7; }
+
+/* ===== STEP LIST ===== */
+.step-list { display:flex; flex-direction:column; gap:12px; margin-bottom:24px; }
+.step {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 14px; background: var(--bg3);
+  border: 1px solid var(--border); border-radius:3px;
+}
+.step-num {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 700; font-size: 16px;
+  color: var(--accent); min-width: 24px;
+  line-height: 1;
+}
+.step-body {}
+.step-title {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700; font-size: 12px;
+  letter-spacing: 1px; margin-bottom: 3px;
+}
+.step-desc { font-size: 12px; color: #999; line-height: 1.7; }
+.step-tip {
+  display:inline-block; margin-top:6px;
+  font-family:'Roboto',sans-serif; font-weight:700;
+  font-size:9px; letter-spacing:1px;
+  padding:2px 8px; background:rgba(232,255,0,0.1);
+  border:1px solid rgba(232,255,0,0.3); color:var(--accent);
+  border-radius:2px;
+}
+
+/* ===== SOUND TABLE ===== */
+.sound-table {
+  width:100%; border-collapse:collapse;
+  margin-bottom:20px; font-size:12px;
+}
+.sound-table th {
+  font-family:'Roboto',sans-serif;
+  font-weight:700; font-size:9px;
+  letter-spacing:2px; color:var(--muted);
+  text-align:left; padding:8px 10px;
+  border-bottom:1px solid var(--border);
+}
+.sound-table td {
+  padding:10px; border-bottom:1px solid #141414;
+  color:#ccc; vertical-align:middle;
+}
+.sound-table tr:last-child td { border-bottom:none; }
+.sound-pill {
+  display:inline-block;
+  font-family:'Roboto Mono',monospace;
+  font-weight:700; font-size:9px; letter-spacing:1px;
+  padding:2px 8px; border-radius:2px;
+}
+.pill-high { background:rgba(232,255,0,0.1); color:var(--accent); border:1px solid rgba(232,255,0,0.3); }
+.pill-low  { background:rgba(255,48,48,0.1); color:var(--hot); border:1px solid rgba(255,48,48,0.3); }
+
+/* ===== DELTA MODES ===== */
+.delta-list { display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
+.delta-item {
+  display:flex; gap:12px; align-items:flex-start;
+  padding:12px; background:var(--bg3);
+  border:1px solid var(--border); border-radius:3px;
+}
+.delta-icon {
+  font-family:'Roboto',sans-serif; font-weight:900;
+  font-size:9px; letter-spacing:2px;
+  padding:3px 7px; color:#000; background:var(--accent);
+  flex-shrink:0; margin-top:1px;
+}
+.delta-body {}
+.delta-name { font-weight:700; font-size:12px; margin-bottom:2px; }
+.delta-desc { font-size:11px; color:#888; }
+
+/* ===== FEATURE BADGES ===== */
+.badge-row {
+  display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px;
+}
+.badge {
+  font-family:'Roboto',sans-serif; font-weight:700;
+  font-size:9px; letter-spacing:2px;
+  padding:5px 10px; border:1px solid var(--border);
+  color:var(--muted); border-radius:2px;
+}
+.badge.accent { border-color:var(--accent); color:var(--accent); }
+
+/* ===== POCKET MOCKUP ===== */
+.ui-pocket {
+  background:rgba(0,0,0,0.92);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:20px 10px; gap:8px;
+}
+.ui-pocket-clock {
+  font-family:'Roboto Mono',monospace;
+  font-weight:700; font-size:20px;
+  color:#fff; letter-spacing:2px;
+}
+.ui-pocket-icon { font-size:24px; }
+.ui-pocket-label {
+  font-family:'Roboto',sans-serif;
+  font-weight:900; font-size:13px;
+  letter-spacing:5px; color:var(--accent);
+}
+.ui-pocket-sub {
+  font-size:8px; color:#555; text-align:center;
+  line-height:1.7; letter-spacing:1px;
+}
+
+/* ===== HOLD BAR ===== */
+.ui-hold-bar {
+  position:absolute; bottom:0; left:0; right:0;
+  height:3px; background:#1a1a1a;
+}
+.ui-hold-fill {
+  height:100%; background:var(--hot); border-radius:0 2px 2px 0;
+}
+
+/* ===== SECTION DIVIDER ===== */
+.divider {
+  display:flex; align-items:center; gap:12px;
+  margin: 24px 0;
+}
+.divider-line { flex:1; height:1px; background:var(--border); }
+.divider-text {
+  font-family:'Roboto Mono',monospace;
+  font-size:9px; font-weight:700; letter-spacing:2px; color:var(--dim);
+}
+
+/* ===== SCROLL ANIMATIONS ===== */
+.fade-in {
+  opacity:0; transform:translateY(16px);
+  transition:opacity 0.5s ease, transform 0.5s ease;
+}
+.fade-in.visible { opacity:1; transform:translateY(0); }
+
+/* ===== FOOTER ===== */
+.footer {
+  position:relative; z-index:1;
+  padding:40px 24px; text-align:center;
+  border-top:1px solid var(--border);
+}
+.footer-logo {
+  font-family:'Roboto',sans-serif;
+  font-weight:900; font-size:28px;
+  letter-spacing:8px; color:var(--accent);
+  margin-bottom:8px;
+}
+.footer-sub {
+  font-size:11px; color:var(--dim); letter-spacing:3px;
+}
+
+/* ===== PHONE WRAP CENTER ===== */
+.phone-center { display:flex; justify-content:center; margin-bottom:16px; }
+
+/* ===== NOTE BOX ===== */
+.note {
+  background:rgba(232,255,0,0.05);
+  border:1px solid rgba(232,255,0,0.2);
+  border-radius:3px; padding:12px 14px;
+  font-size:11px; color:#bbb; line-height:1.8;
+  margin-bottom:16px;
+}
+.note strong {
+  font-family:'Roboto',sans-serif;
+  font-weight:700; color:var(--accent);
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="toc-nav" id="tocNav">
+  <a href="#overview"  class="active">概要</a>
+  <a href="#lap">LAP</a>
+  <a href="#timer">TIMER</a>
+  <a href="#sound">音声</a>
+  <a href="#pocket">ポケット</a>
+  <a href="#settings">設定</a>
+  <a href="#faq">FAQ</a>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="hero-eyebrow">OFFICIAL MANUAL — v7b</div>
+  <div class="hero-logo">BLINDTAP</div>
+  <div class="hero-sub">BLIND OPERATION LAP TIMER</div>
+  <div class="hero-desc">
+    画面を見ずに操作できる、モータースポーツ向けラップタイマー＆カウントダウンタイマー。音とバイブレーションで結果を伝え、ブラインド操作に特化した設計。
+  </div>
+  <div class="version-badge">VERSION 7b · iOS SAFARI 対応</div>
+</header>
+
+<!-- ===== 1. OVERVIEW ===== -->
+<section class="section fade-in" id="overview">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">概要</h2>
+  </div>
+  <p class="section-lead">BLINDTAPは2つのモードを持つ。上部のタブで切り替える。</p>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-card-icon">🏁</div>
+      <div class="info-card-title">LAPモード</div>
+      <div class="info-card-body">ストップウォッチ式ラップタイマー。タップでラップ記録、ホールドで停止。差分を音声読み上げ。</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">⏱</div>
+      <div class="info-card-title">TIMERモード</div>
+      <div class="info-card-body">カウントダウンタイマー。シンプルな1タイマーと、複数セグメントを連続実行するシーケンシャルモードを搭載。</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">🔊</div>
+      <div class="info-card-title">音声フィードバック</div>
+      <div class="info-card-body">ビープ音と音声読み上げで操作結果を伝達。「おそい、2秒3」「はやい、1秒0」等。</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">🔒</div>
+      <div class="info-card-title">ポケットモード</div>
+      <div class="info-card-body">スマホをポケットに入れたときの誤操作を防止。ダブルタップで解除。</div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>ブラインド操作の原則</strong><br>
+    大きなボタンエリアをタップするだけで操作が完結。ラップ記録も停止も、画面を一切見ずに指の感触だけで行える設計。
+  </div>
+</section>
+
+<!-- ===== 2. LAP MODE ===== -->
+<section class="section fade-in" id="lap">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title">LAPモード</h2>
+  </div>
+  <p class="section-lead">ラップタイマーの全機能をここで解説する。</p>
+
+  <!-- DIAGRAM -->
+  <div class="phone-center">
+    <div style="position:relative; width:340px;">
+      <div class="phone" style="width:200px; margin:0 auto;">
+        <div class="phone-notch"><div class="phone-notch-pill"></div></div>
+        <div class="phone-screen">
+          <div class="ui-datetime">2026.03.01（日）｜ 11:10:31</div>
+          <div class="ui-header">
+            <div class="ui-logo">BLINDTAP</div>
+            <div class="ui-tabs">
+              <div class="ui-tab active">LAP</div>
+              <div class="ui-tab">TIMER</div>
+            </div>
+            <div class="ui-icons">🔒🔊⚙️</div>
+          </div>
+          <div class="ui-delta">
+            <span style="font-size:8px;color:#555">◀</span>
+            <span class="ui-delta-mode">目標タイム差</span>
+            <span style="font-size:7px;color:#666">目標</span>
+            <span class="ui-delta-target">2:13.000</span>
+            <span class="ui-lap-count">LAP 4</span>
+          </div>
+          <div class="ui-laplist">
+            <div class="ui-lap-row slow">
+              <div class="ui-lap-num">3</div>
+              <div class="ui-lap-time">00:05.430</div>
+              <div class="ui-lap-delta red">+2.43s</div>
+              <div class="ui-lap-badge">SLOW</div>
+            </div>
+            <div class="ui-lap-row">
+              <div class="ui-lap-num">2</div>
+              <div class="ui-lap-time">00:02.133</div>
+              <div class="ui-lap-delta green">-0.87s</div>
+              <div class="ui-lap-badge"></div>
+            </div>
+            <div class="ui-lap-row best">
+              <div class="ui-lap-num">1</div>
+              <div class="ui-lap-time">00:01.790</div>
+              <div class="ui-lap-delta green">-1.21s</div>
+              <div class="ui-lap-badge">BEST</div>
+            </div>
+          </div>
+          <div class="ui-tapzone" style="height:90px;">
+            <div class="ui-tapzone-time">00:02.000</div>
+            <div class="ui-tapzone-delta green">-0.21s</div>
+            <div class="ui-tapzone-label">TAP = LAP</div>
+            <div class="ui-tapzone-hint">HOLD 1s = STOP</div>
+            <div class="ui-hold-bar"><div class="ui-hold-fill" style="width:40%"></div></div>
+          </div>
+          <div class="ui-btn-row">
+            <div class="ui-btn reset-only">RESET</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 吹き出し右 -->
+      <div style="position:absolute; top:52px; right:0; display:flex; align-items:center; gap:4px;">
+        <div style="width:1px; height:1px; border-top:1px solid var(--accent); width:50px;"></div>
+        <div style="font-family:'Roboto',sans-serif; font-size:9px; font-weight:700; color:var(--accent); white-space:nowrap;">① モード切替タブ</div>
+      </div>
+      <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;">
+        <line x1="200" y1="62" x2="222" y2="62" stroke="#e8ff00" stroke-width="1"/>
+      </svg>
+
+      <div style="position:absolute; top:80px; right:0; display:flex; align-items:center; gap:4px;">
+        <div style="width:50px; height:1px; background:var(--accent);"></div>
+        <div style="font-family:'Roboto',sans-serif; font-size:9px; font-weight:700; color:var(--accent); white-space:nowrap;">② 差分モード＆目標</div>
+      </div>
+      <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;">
+        <line x1="200" y1="90" x2="222" y2="90" stroke="#e8ff00" stroke-width="1"/>
+      </svg>
+
+      <div style="position:absolute; top:130px; right:0; display:flex; align-items:center; gap:4px;">
+        <div style="width:50px; height:1px; background:var(--accent);"></div>
+        <div style="font-family:'Roboto',sans-serif; font-size:9px; font-weight:700; color:var(--accent); white-space:nowrap;">③ ラップリスト</div>
+      </div>
+      <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;">
+        <line x1="200" y1="140" x2="222" y2="140" stroke="#e8ff00" stroke-width="1"/>
+      </svg>
+
+      <div style="position:absolute; top:248px; right:0; display:flex; align-items:center; gap:4px;">
+        <div style="width:50px; height:1px; background:var(--accent);"></div>
+        <div style="font-family:'Roboto',sans-serif; font-size:9px; font-weight:700; color:var(--accent); white-space:nowrap;">④ 大タップゾーン</div>
+      </div>
+      <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;">
+        <line x1="200" y1="258" x2="222" y2="258" stroke="#e8ff00" stroke-width="1"/>
+      </svg>
+
+      <!-- 左 -->
+      <div style="position:absolute; top:248px; left:0; display:flex; align-items:center; flex-direction:row-reverse; gap:4px;">
+        <div style="width:50px; height:1px; background:var(--accent);"></div>
+        <div style="font-family:'Roboto',sans-serif; font-size:9px; font-weight:700; color:var(--accent); white-space:nowrap; text-align:right;">ホールド1秒=停止</div>
+      </div>
+      <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;">
+        <line x1="70" y1="278" x2="48" y2="278" stroke="#e8ff00" stroke-width="1"/>
+      </svg>
+
+      <div style="position:absolute; top:320px; left:0; display:flex; align-items:center; flex-direction:row-reverse; gap:4px;">
+        <div style="width:50px; height:1px; background:var(--accent);"></div>
+        <div style="font-family:'Roboto',sans-serif; font-size:9px; font-weight:700; color:var(--accent); white-space:nowrap; text-align:right;">⑤ RESETボタン</div>
+      </div>
+      <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;">
+        <line x1="70" y1="330" x2="48" y2="330" stroke="#e8ff00" stroke-width="1"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-text">OPERATION</div><div class="divider-line"></div></div>
+
+  <div class="step-list">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">スタート</div>
+        <div class="step-desc">大タップゾーン（画面下半分）をタップ。高くて長いビープ音「ピーーー」が鳴ればスタート完了。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">ラップ記録</div>
+        <div class="step-desc">走行中にタップするたびにラップを記録。短い高音「ピッ」で確認。差分が音声で読み上げられる。</div>
+        <span class="step-tip">「おそい、2秒3」「はやい、0秒8」「同じ」</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">停止</div>
+        <div class="step-desc">大タップゾーンを1秒間長押し。画面下部のバーが満タンになったところで離す。低音「ポーーー」で停止確認。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">リセット</div>
+        <div class="step-desc">下部の「RESET」ボタンで全データをクリア。ラップリストが消えてゼロに戻る。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-text">DELTA MODES</div><div class="divider-line"></div></div>
+  <p class="section-lead" style="margin-bottom:14px;">差分バー（画面上部）を左右スワイプで4種のモードを切り替えられる。</p>
+
+  <div class="delta-list">
+    <div class="delta-item">
+      <div class="delta-icon">TARGET</div>
+      <div class="delta-body">
+        <div class="delta-name">目標タイム差</div>
+        <div class="delta-desc">設定した目標タイムとの差分を表示・読み上げ。「2:13.000」のように入力。</div>
+      </div>
+    </div>
+    <div class="delta-item">
+      <div class="delta-icon">PREV</div>
+      <div class="delta-body">
+        <div class="delta-name">前ラップ差</div>
+        <div class="delta-desc">1つ前のラップとの差分。ペースの変化をリアルタイムに把握。</div>
+      </div>
+    </div>
+    <div class="delta-item">
+      <div class="delta-icon">BEST</div>
+      <div class="delta-body">
+        <div class="delta-name">ベスト差</div>
+        <div class="delta-desc">セッション中のベストラップとの差分。自己ベスト更新の瞬間がわかる。</div>
+      </div>
+    </div>
+    <div class="delta-item">
+      <div class="delta-icon">NONE</div>
+      <div class="delta-body">
+        <div class="delta-name">タイムのみ</div>
+        <div class="delta-desc">差分なし。ラップタイムの数値だけをシンプルに記録する。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 3. TIMER MODE ===== -->
+<section class="section fade-in" id="timer">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">TIMERモード</h2>
+  </div>
+  <p class="section-lead">2種類のカウントダウンタイマーを搭載。シンプルタイマーとシーケンシャルタイマー。</p>
+
+  <!-- TIMER DIAGRAM -->
+  <div class="phone-center">
+    <div style="position:relative; width:340px;">
+      <div class="phone" style="width:200px; margin:0 auto;">
+        <div class="phone-notch"><div class="phone-notch-pill"></div></div>
+        <div class="phone-screen">
+          <div class="ui-datetime">2026.03.01（日）｜ 11:10:31</div>
+          <div class="ui-header">
+            <div class="ui-logo">BLINDTAP</div>
+            <div class="ui-tabs">
+              <div class="ui-tab">LAP</div>
+              <div class="ui-tab active">TIMER</div>
+            </div>
+            <div class="ui-icons">🔒🔊⚙️</div>
+          </div>
+          <div class="ui-seq-list" style="flex:1">
+            <div class="ui-seq-item">
+              <div class="ui-seq-num">1</div>
+              <div class="ui-seq-name">ウォームアップ</div>
+              <div class="ui-seq-time">3:00</div>
+            </div>
+            <div class="ui-seq-item">
+              <div class="ui-seq-num">2</div>
+              <div class="ui-seq-name">メインセット</div>
+              <div class="ui-seq-time">5:00</div>
+            </div>
+            <div class="ui-seq-item">
+              <div class="ui-seq-num">3</div>
+              <div class="ui-seq-name">クールダウン</div>
+              <div class="ui-seq-time">2:00</div>
+            </div>
+            <div class="ui-seq-add">＋ セグメント追加</div>
+          </div>
+          <div class="ui-timer-tap">
+            <div class="ui-presets">
+              <div class="ui-preset-btn">1分</div>
+              <div class="ui-preset-btn sel">3分</div>
+              <div class="ui-preset-btn">5分</div>
+              <div class="ui-preset-btn">10分</div>
+            </div>
+            <div class="ui-timer-time">03:00</div>
+            <div class="ui-seq-toggle on">
+              <div class="ui-seq-dot on"></div>
+              <span>⚡ シーケンシャルモード</span>
+            </div>
+            <div class="ui-tapzone-label-timer">TAP TO START</div>
+            <div class="ui-tapzone-hint-timer">HOLD 1s = RESET</div>
+          </div>
+          <div class="ui-btn-row">
+            <div class="ui-btn reset-only">RESET</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右吹き出し -->
+      <div style="position:absolute; top:100px; right:0; display:flex; align-items:center; gap:4px;">
+        <div style="width:50px; height:1px; background:var(--accent);"></div>
+        <div style="font-family:'Roboto',sans-serif; font-size:9px; font-weight:700; color:var(--accent); white-space:nowrap;">① セグメントリスト</div>
+      </div>
+      <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;">
+        <line x1="200" y1="110" x2="222" y2="110" stroke="#e8ff00" stroke-width="1"/>
+      </svg>
+
+      <div style="position:absolute; top:218px; right:0; display:flex; align-items:center; gap:4px;">
+        <div style="width:50px; height:1px; background:var(--accent);"></div>
+        <div style="font-family:'Roboto',sans-serif; font-size:9px; font-weight:700; color:var(--accent); white-space:nowrap;">② プリセット4個</div>
+      </div>
+      <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;">
+        <line x1="200" y1="228" x2="222" y2="228" stroke="#e8ff00" stroke-width="1"/>
+      </svg>
+
+      <div style="position:absolute; top:248px; right:0; display:flex; align-items:center; gap:4px;">
+        <div style="width:50px; height:1px; background:var(--accent);"></div>
+        <div style="font-family:'Roboto',sans-serif; font-size:9px; font-weight:700; color:var(--accent); white-space:nowrap;">③ 時間入力（タップ）</div>
+      </div>
+      <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;">
+        <line x1="200" y1="258" x2="222" y2="258" stroke="#e8ff00" stroke-width="1"/>
+      </svg>
+
+      <!-- 左 -->
+      <div style="position:absolute; top:278px; left:0; display:flex; align-items:center; flex-direction:row-reverse; gap:4px;">
+        <div style="width:50px; height:1px; background:var(--accent);"></div>
+        <div style="font-family:'Roboto',sans-serif; font-size:9px; font-weight:700; color:var(--accent); white-space:nowrap; text-align:right;">④ SEQモードON/OFF</div>
+      </div>
+      <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;">
+        <line x1="70" y1="288" x2="48" y2="288" stroke="#e8ff00" stroke-width="1"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-text">SIMPLE TIMER</div><div class="divider-line"></div></div>
+
+  <div class="step-list">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">時間を設定する</div>
+        <div class="step-desc">プリセット（1分 / 3分 / 5分 / 10分）をタップ、または大ボタン内の時間表示をタップしてキーボードで直接入力。</div>
+        <span class="step-tip">入力例：「3」→ 00:03 / 「30」→ 00:30 / 「130」→ 01:30</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">スタート</div>
+        <div class="step-desc">大タップゾーンをタップ。カウントダウンが始まる。残り10秒から高音、残り5秒から低音カウントダウン音が鳴る。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">終了・リセット</div>
+        <div class="step-desc">ゼロになると長い低音「ポーーー」で知らせる。RESETボタンで設定時間もゼロに戻る。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-text">SEQUENTIAL TIMER</div><div class="divider-line"></div></div>
+
+  <div class="step-list">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">シーケンシャルモードをONにする</div>
+        <div class="step-desc">大ボタン内の「シーケンシャルモード」ボタンをタップ。黄色くハイライトされ、上部にセグメントリストが表示される。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">セグメントを編集する</div>
+        <div class="step-desc">リスト内の名前と時間をタップして編集。「＋ セグメント追加」で項目を増やせる。「✕」で削除。</div>
+        <span class="step-tip">例：ウォームアップ 3:00 → メインセット 5:00 → クールダウン 2:00</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">スタート</div>
+        <div class="step-desc">大タップゾーンをタップ。セグメントが順番に自動で切り替わる。切り替わり時に次のセグメント名と時間が音声で読み上げられる。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 4. SOUND ===== -->
+<section class="section fade-in" id="sound">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2 class="section-title">音声フィードバック</h2>
+  </div>
+  <p class="section-lead">ブラインド操作の核心。音だけで何が起きたかわかる設計。</p>
+
+  <table class="sound-table">
+    <thead>
+      <tr>
+        <th>操作</th>
+        <th>音</th>
+        <th>特徴</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>スタート</td>
+        <td><span class="sound-pill pill-high">1300Hz / 0.55秒</span></td>
+        <td>高くて長い「ピーーー」</td>
+      </tr>
+      <tr>
+        <td>ラップ記録</td>
+        <td><span class="sound-pill pill-high">1500Hz / 0.10秒</span></td>
+        <td>高くて短い「ピッ」</td>
+      </tr>
+      <tr>
+        <td>停止 / 終了</td>
+        <td><span class="sound-pill pill-low">400Hz / 0.70秒</span></td>
+        <td>低くて長い「ポーーー」</td>
+      </tr>
+      <tr>
+        <td>カウントダウン 10〜6秒</td>
+        <td><span class="sound-pill pill-high">1100Hz / 短</span></td>
+        <td>高音ビープ（1秒ごと）</td>
+      </tr>
+      <tr>
+        <td>カウントダウン 5〜1秒</td>
+        <td><span class="sound-pill pill-low">660Hz / 短</span></td>
+        <td>低音ビープ＋数字読み上げ</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <strong>音声読み上げの例（LAPモード）</strong><br>
+    「おそい、2秒3」— 目標より2.3秒遅い<br>
+    「はやい、1秒0」— 目標より1.0秒速い<br>
+    「同じ」— 差分が0.15秒未満
+  </div>
+
+  <div class="note">
+    <strong>SEQタイマーの切替読み上げ例</strong><br>
+    「メインセット、5ふん」— セグメント名と時間を告知
+  </div>
+
+  <div class="divider"><div class="divider-line"></div><div class="divider-text">SOUND SETTINGS</div><div class="divider-line"></div></div>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-card-title">BEEP</div>
+      <div class="info-card-body">標準。合成音のビープ音と音声読み上げ。</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-title">🐶 WANKO</div>
+      <div class="info-card-body">犬の鳴き声モード。「ワン」「ワンワン」「ワォーン」</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-title">🐱 NYANKO</div>
+      <div class="info-card-body">猫の鳴き声モード。「にゃん」「にゃにゃ」「にゃーん」</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-title">MUTE</div>
+      <div class="info-card-body">消音モード。バイブレーションのみ（Android）</div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>🔊 音声フィードバック（読み上げ）は別途ON/OFFが可能。</strong><br>
+    ヘッダーの🔊ボタン、または設定画面の「VOICE FEEDBACK」で切り替え。
+  </div>
+</section>
+
+<!-- ===== 5. POCKET MODE ===== -->
+<section class="section fade-in" id="pocket">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2 class="section-title">ポケットモード</h2>
+  </div>
+  <p class="section-lead">スマホをポケットやパッドに収納したときの誤操作を防ぐ。時計表示だけは常に見える。</p>
+
+  <!-- POCKET DIAGRAM -->
+  <div class="phone-center">
+    <div class="phone" style="width:200px;">
+      <div class="phone-notch"><div class="phone-notch-pill"></div></div>
+      <div class="phone-screen">
+        <div class="ui-pocket">
+          <div class="ui-pocket-clock">11:10:31</div>
+          <div class="ui-pocket-icon">🔒</div>
+          <div class="ui-pocket-label">LOCKED</div>
+          <div class="ui-pocket-sub">誤操作防止モード<br>画面をすばやく2回タップで解除</div>
+          <div style="margin-top:12px; font-family:'Roboto',sans-serif; font-size:7px; color:#333; letter-spacing:2px;">DOUBLE TAP TO UNLOCK</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-list" style="margin-top:20px;">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">ロックする</div>
+        <div class="step-desc">ヘッダーの🔒ボタンをタップ。画面全体が暗くなり、現在時刻だけが表示される。バイブレーションでロック確認（Android）。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">解除する</div>
+        <div class="step-desc">ロック画面をすばやく2回連続でタップ（ダブルタップ）。500ms以内に2回叩けば解除される。</div>
+        <span class="step-tip">スマホを取り出してすぐ操作できる</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>注意</strong><br>
+    ロック中も計測・カウントダウンは継続している。ロックはあくまで誤タップ防止のためのもの。
+  </div>
+</section>
+
+<!-- ===== 6. SETTINGS ===== -->
+<section class="section fade-in" id="settings">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2 class="section-title">設定</h2>
+  </div>
+  <p class="section-lead">ヘッダー右端の⚙️ボタンから設定画面を開く。</p>
+
+  <div class="delta-list">
+    <div class="delta-item">
+      <div class="delta-icon" style="font-size:7px; padding:5px 6px;">SOUND<br>MODE</div>
+      <div class="delta-body">
+        <div class="delta-name">サウンドモード</div>
+        <div class="delta-desc">BEEP / WANKO / NYANKO / MUTE から選択。</div>
+      </div>
+    </div>
+    <div class="delta-item">
+      <div class="delta-icon" style="font-size:7px; padding:5px 6px;">VOICE<br>FEED</div>
+      <div class="delta-body">
+        <div class="delta-name">音声フィードバック</div>
+        <div class="delta-desc">ON/OFFで音声読み上げを切り替え。ヘッダーの🔊/🔇ボタンでも即切替可能。</div>
+      </div>
+    </div>
+    <div class="delta-item">
+      <div class="delta-icon" style="font-size:7px; padding:5px 6px;">HOT<br>LAP</div>
+      <div class="delta-body">
+        <div class="delta-name">ベストラップの色</div>
+        <div class="delta-desc">RED / ORANGE / PINK から選択。ベストラップの強調色を変更。</div>
+      </div>
+    </div>
+    <div class="delta-item">
+      <div class="delta-icon" style="font-size:7px; padding:5px 6px;">WORST<br>LAP</div>
+      <div class="delta-body">
+        <div class="delta-name">ワーストラップの色</div>
+        <div class="delta-desc">BLUE / GRAY / PURPLE から選択。ワーストラップの強調色を変更。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>WakeLock（画面スリープ防止）</strong><br>
+    計測中・カウントダウン中は自動的に画面スリープを防止する。計測停止またはリセット時に解除される。
+  </div>
+</section>
+
+<!-- ===== 7. FAQ ===== -->
+<section class="section fade-in" id="faq">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2 class="section-title">よくある質問</h2>
+  </div>
+
+  <div class="step-list">
+    <div class="step">
+      <div class="step-num">Q</div>
+      <div class="step-body">
+        <div class="step-title">音が出ない</div>
+        <div class="step-desc">iOSはページ読み込み直後は音が出ない仕様。最初に画面を1回タップすることで音声が有効になる。また🔊ボタンで音声フィードバックがONになっているか確認。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">Q</div>
+      <div class="step-body">
+        <div class="step-title">シーケンシャルモードでスタートできない</div>
+        <div class="step-desc">「⚡ シーケンシャルモード」ボタンが黄色くハイライトされているか確認。OFFの場合は大ボタン内の時間入力が必要。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">Q</div>
+      <div class="step-body">
+        <div class="step-title">ポケットモードが解除できない</div>
+        <div class="step-desc">ダブルタップは0.5秒以内に2回。ゆっくりすぎると認識されない。素早くトントンと叩く。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">Q</div>
+      <div class="step-body">
+        <div class="step-title">時間の入力方法がわからない</div>
+        <div class="step-desc">大ボタン内の時間表示（グレーの「00:00」）をタップするとキーボードが出る。数字を入力すると自動的にMM:SSフォーマットに変換される。「130」と打てば「01:30」になる。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">Q</div>
+      <div class="step-body">
+        <div class="step-title">ホーム画面に追加したい</div>
+        <div class="step-desc">iOSのSafariで開いた状態で、共有ボタン →「ホーム画面に追加」でアプリのように使える。フルスクリーンで起動するようになる。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-logo">BLINDTAP</div>
+  <div class="footer-sub">BLIND OPERATION LAP TIMER — v7b</div>
+  <div style="margin-top:20px; font-size:10px; color:var(--dim); letter-spacing:1px; line-height:2;">
+    設計・開発：Claude (Anthropic)<br>
+    プロデュース：BLINDTAP Project
+  </div>
+</footer>
+
+<script>
+// ===== SCROLL FADE IN =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// ===== STICKY NAV HIGHLIGHT =====
+const sections = document.querySelectorAll('section[id], header[id]');
+const navLinks = document.querySelectorAll('.toc-nav a');
+const onScroll = () => {
+  let current = '';
+  sections.forEach(s => {
+    if(window.scrollY >= s.offsetTop - 80) current = s.id;
+  });
+  navLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#'+current);
+  });
+};
+window.addEventListener('scroll', onScroll, { passive:true });
+</script>
+</body>
+</html>
