@@ -120,8 +120,44 @@
   }
   .tap-zone:active { background:var(--btn-active); }
   .tap-main-time {
+    font-family:'Roboto Mono',monospace; font-weight:700; font-size:48px;
+    color:#3399ff; line-height:1; pointer-events:none; font-variant-numeric:tabular-nums;
+    letter-spacing:-1px;
+  }
+  /* ★ ラップタイム：上部・小さめ青ボックス */
+  .tap-lap-box {
+    display:flex; flex-direction:column; align-items:center;
+    pointer-events:none; width:88%;
+    border:1px solid #1e2a3a; border-radius:4px;
+    padding:5px 12px 6px; margin-bottom:6px;
+    background:rgba(51,153,255,0.04);
+    position:relative;
+  }
+  .tap-lap-box-label {
+    font-family:'Roboto',sans-serif; font-weight:900; font-size:9px;
+    letter-spacing:3px; color:#3399ff;
+    margin-bottom:2px;
+  }
+  /* tap-main-time はラップ表示に使い続けるのでサイズ変更 */
+
+  /* ★ トータルタイム：下部・大ボックス黄色 */
+  .tap-total-wrap {
+    display:flex; flex-direction:column; align-items:center;
+    pointer-events:none; width:88%;
+    border:1px solid #2e2e00; border-radius:4px;
+    padding:6px 12px 4px; margin-top:4px;
+    background:rgba(232,255,0,0.03);
+    position:relative;
+  }
+  .tap-total-time {
     font-family:'Roboto Mono',monospace; font-weight:700; font-size:64px;
-    color:var(--accent); line-height:1; pointer-events:none; font-variant-numeric:tabular-nums;
+    color:var(--accent); font-variant-numeric:tabular-nums;
+    line-height:1; letter-spacing:-1px;
+  }
+  .tap-total-label {
+    font-family:'Roboto',sans-serif; font-weight:900; font-size:9px;
+    letter-spacing:3px; color:#b8cc00;
+    margin-top:4px;
   }
   .tap-delta-display {
     font-family:'Roboto Mono',monospace; font-weight:600; font-size:20px;
@@ -480,9 +516,7 @@
     <button class="mode-tab active" onclick="switchMode('lap')">LAP</button>
     <button class="mode-tab"        onclick="switchMode('timer')">TIMER</button>
   </div>
-<div class="header-right">
-    <button class="icon-btn" onclick="location.href='blindtap_manual.html'" title="MANUAL">❓</button>
-    
+  <div class="header-right">
     <button class="icon-btn" id="pocketBtn" onclick="enablePocket()" title="ポケットモード">🔒</button>
     <button class="icon-btn active-icon" id="voiceToggleBtn" onclick="toggleVoice()">🔊</button>
     <button class="icon-btn" onclick="openSettings()">⚙️</button>
@@ -516,8 +550,17 @@
        ontouchstart="onTapStart(event)" ontouchend="onTapEnd(event)"
        onmousedown="onTapStart(event)"  onmouseup="onTapEnd(event)"
        onmouseleave="onTapCancel()">
-    <div class="tap-main-time" id="tapTime">00:00.000</div>
-    <div class="tap-delta-display" id="tapDeltaDisplay"></div>
+    <!-- 上：ラップタイム（小・青・ボックス） -->
+    <div class="tap-lap-box" id="tapLapBox">
+      <div class="tap-lap-box-label">LAP TIME</div>
+      <div class="tap-main-time" id="tapTime">00:00.000</div>
+      <div class="tap-delta-display" id="tapDeltaDisplay"></div>
+    </div>
+    <!-- 下：トータルタイム（大・黄・ボックス） -->
+    <div class="tap-total-wrap" id="tapTotalWrap" style="display:flex;">
+      <div class="tap-total-time" id="tapTotalTime">00:00.000</div>
+      <div class="tap-total-label">TOTAL TIME</div>
+    </div>
     <div class="tap-label" id="tapLabel">TAP TO START</div>
     <div class="tap-hint">HOLD 1s = STOP</div>
     <div class="hold-bar-wrap"><div class="hold-bar" id="holdBar"></div></div>
@@ -895,6 +938,9 @@ function lapTick() {
   const prev=laps.reduce((a,l)=>a+l.ms,0);
   const cur=total-prev;
   document.getElementById('tapTime').textContent=formatMs(cur);
+  // トータルタイム：スタートから常に更新
+  const tt=document.getElementById('tapTotalTime');
+  if(tt) tt.textContent=formatMs(total);
   if(laps.length>0&&DELTA_MODES[deltaIdx].key!=='none') {
     const minMs=Math.min(...laps.map(l=>l.ms));
     const ref=getDeltaRef(laps.length,minMs);
@@ -922,6 +968,8 @@ function resetLap() {
   lapRunning=false; cancelAnimationFrame(lapRaf); laps=[];
   releaseWakeLock();
   document.getElementById('tapTime').textContent='00:00.000';
+  document.getElementById('tapTotalTime').textContent='00:00.000';
+  document.getElementById('tapTotalWrap').style.display='flex';
   document.getElementById('tapDeltaDisplay').textContent='';
   document.getElementById('tapLabel').textContent='TAP TO START';
   document.getElementById('lapCount').textContent='LAP 0';
@@ -944,6 +992,12 @@ function doLap() {
 function doStopLap() {
   if(!lapRunning) return;
   lapRunning=false; cancelAnimationFrame(lapRaf);
+  // 停止後にトータルを最終確定値で更新
+  setTimeout(()=>{
+    const finalTotal=laps.reduce((a,l)=>a+l.ms,0);
+    const tt=document.getElementById('tapTotalTime');
+    if(tt&&laps.length>0) tt.textContent=formatMs(finalTotal);
+  },50);
   const lapMs=(Date.now()-lapStartTime)-laps.reduce((a,l)=>a+l.ms,0);
   laps.push({ms:lapMs});
   playStop(); vibrate([50,30,50]); flash();
@@ -1365,5 +1419,4 @@ const _seqSec=document.getElementById('seqSection');
 if(_seqSec) _seqSec.style.display='none';
 </script>
 </body>
-
 </html>
