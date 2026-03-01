@@ -480,7 +480,9 @@
     <button class="mode-tab active" onclick="switchMode('lap')">LAP</button>
     <button class="mode-tab"        onclick="switchMode('timer')">TIMER</button>
   </div>
-  <div class="header-right">
+<div class="header-right">
+    <button class="icon-btn" onclick="location.href='blindtap_manual.html'" title="MANUAL">❓</button>
+    
     <button class="icon-btn" id="pocketBtn" onclick="enablePocket()" title="ポケットモード">🔒</button>
     <button class="icon-btn active-icon" id="voiceToggleBtn" onclick="toggleVoice()">🔊</button>
     <button class="icon-btn" onclick="openSettings()">⚙️</button>
@@ -1363,4 +1365,5 @@ const _seqSec=document.getElementById('seqSection');
 if(_seqSec) _seqSec.style.display='none';
 </script>
 </body>
+
 </html>
