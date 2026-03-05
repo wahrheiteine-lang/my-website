@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>BLINDTAP</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&family=Roboto+Mono:wght@600;700&family=Noto+Sans+JP:wght@400;700&display=swap');
@@ -32,6 +32,7 @@
     max-width: 430px;
     margin: 0 auto;
     position: relative;
+    /* 縦向きはセーフエリアpadding不要（landscape mediaで対応） */
   }
 
   /* ===== DATETIME ===== */
@@ -52,18 +53,19 @@
   /* ===== HEADER ===== */
   .header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 4px 16px 8px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+    padding: 4px 10px 8px; border-bottom: 1px solid var(--border); flex-shrink: 0;
   }
-  .logo { font-family:'Roboto',sans-serif; font-weight:900; font-size:17px; letter-spacing:5px; color:var(--accent); }
-  .mode-tabs { display:flex; gap:4px; }
+  .logo { font-family:'Roboto',sans-serif; font-weight:700; font-size:13px; letter-spacing:2px; color:rgba(204,255,0,0.6); flex-shrink:0; }
+  .mode-tabs { display:flex; gap:2px; flex-shrink:1; min-width:0; }
   .mode-tab {
-    font-family:'Roboto',sans-serif; font-weight:700; font-size:11px; letter-spacing:2px;
-    padding:5px 12px; border:1px solid var(--border); background:transparent;
+    font-family:'Roboto',sans-serif; font-weight:700; font-size:11px; letter-spacing:1px;
+    padding:5px 9px; border:1px solid var(--border); background:transparent;
     color:var(--muted); cursor:pointer; transition:all 0.15s; border-radius:2px;
+    white-space:nowrap;
   }
   .mode-tab.active { background:var(--accent); color:#000; border-color:var(--accent); }
-  .header-right { display:flex; gap:8px; align-items:center; }
-  .icon-btn { font-size:17px; background:none; border:none; cursor:pointer; padding:3px; opacity:0.7; transition:opacity 0.15s; }
+  .header-right { display:flex; gap:4px; align-items:center; flex-shrink:0; }
+  .icon-btn { font-size:16px; background:none; border:none; cursor:pointer; padding:2px; opacity:0.7; transition:opacity 0.15s; flex-shrink:0; }
   .icon-btn:hover { opacity:1; }
   .icon-btn.active-icon { opacity:1; }
 
@@ -116,6 +118,7 @@
     height:48%; background:var(--btn-bg); display:flex; flex-direction:column;
     align-items:center; justify-content:center; cursor:pointer; user-select:none;
     border-top:2px solid var(--border); position:relative; flex-shrink:0;
+    min-width:0;
     transition:background 0.07s; -webkit-user-select:none; touch-action:none;
   }
   .tap-zone:active { background:var(--btn-active); }
@@ -171,7 +174,7 @@
   /* ===== CTRL ROW ===== */
   .btn-row { display:flex; gap:1px; flex-shrink:0; }
   .ctrl-btn {
-    flex:1; padding:11px; background:#0d0d0d; border:none;
+    flex:1; padding:13px; background:#0d0d0d; border:none;
     border-top:1px solid var(--border); color:var(--muted);
     font-family:'Roboto',sans-serif; font-weight:700; font-size:12px;
     letter-spacing:3px; cursor:pointer; transition:all 0.15s;
@@ -181,7 +184,7 @@
   .ctrl-btn.reset { color:#ff4433; }
 
   /* ===================== TIMER SCREEN ===================== */
-  .timer-screen { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+  .timer-screen { flex:1; display:flex; flex-direction:column; overflow:hidden; min-height:0; }
   /* seq-listはLAPのlap-list-areaと同じくflex:1で残りを食う */
   .seq-list { flex:1; overflow-y:auto; scrollbar-width:none; }
   .seq-list::-webkit-scrollbar { display:none; }
@@ -225,10 +228,11 @@
 
   /* ===== TIMER TAP ZONE ===== */
   .timer-tap-zone {
-    height:48%; background:var(--btn-bg); display:flex; flex-direction:column;
-    align-items:center; justify-content:center; border-top:2px solid var(--border);
+    height:48%; flex-shrink:0;
+    background:var(--btn-bg); display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
     user-select:none; -webkit-user-select:none;
-    position:relative; flex-shrink:0;
+    position:relative; min-width:0;
     transition:background 0.07s; touch-action:manipulation;
   }
   .timer-tap-zone:active { background:var(--btn-active); }
@@ -268,12 +272,15 @@
   /* シーケンシャルモードトグル */
   .seq-mode-toggle {
     display:flex; align-items:center; justify-content:center;
-    gap:8px; margin-top:12px; cursor:pointer;
+    gap:8px; margin:6px 14px 4px; cursor:pointer;
     touch-action:manipulation;
-    padding:8px 18px;
+    padding:9px 14px;
     border:1px solid #333; border-radius:4px;
     background:transparent;
     transition:all 0.2s;
+    flex-shrink:0;
+    user-select:none; -webkit-user-select:none;
+    -webkit-touch-callout:none;
   }
   .seq-mode-toggle.active {
     border-color:var(--accent);
@@ -283,6 +290,7 @@
     font-family:'Roboto',sans-serif; font-weight:700; font-size:11px;
     letter-spacing:2px; color:#555;
     transition:color 0.2s;
+    user-select:none; -webkit-user-select:none;
   }
   .seq-mode-label.active { color:var(--accent); }
   .seq-mode-dot {
@@ -295,20 +303,67 @@
     font-family:'Roboto Mono',monospace; font-weight:700; font-size:72px;
     color:var(--accent); pointer-events:none; line-height:1; font-variant-numeric:tabular-nums;
   }
-  .timer-big.urgent, .timer-time-field.urgent { color:var(--hot); }
+  .timer-big.urgent, .timer-time-field.urgent, .board-timer-time.urgent { color:var(--hot); }
   .timer-time-field.countdown-num { font-size:110px; animation:cdPulse 0.5s ease infinite alternate; }
   .timer-big.countdown-num { font-size:110px; animation:cdPulse 0.5s ease infinite alternate; }
   @keyframes cdPulse { from{transform:scale(1);opacity:1} to{transform:scale(1.06);opacity:0.85} }
   .timer-seg-current {
-    font-family:'Noto Sans JP',sans-serif; font-weight:400; font-size:11px;
-    color:var(--muted); letter-spacing:1px; pointer-events:none; margin-bottom:4px;
+    font-family:'Noto Sans JP',sans-serif; font-weight:700;
+    font-size:clamp(13px,4vw,20px);
+    color:#ccc; letter-spacing:2px; pointer-events:none;
+    margin-bottom:6px; text-align:center;
   }
+  /* ===== 通常モード入力エリア（左パネル） ===== */
+  .normal-time-hint {
+    font-family:'Roboto',sans-serif; font-size:11px; letter-spacing:2px;
+    color:var(--muted); margin-bottom:6px; text-align:center;
+  }
+  .normal-time-input {
+    font-family:'Roboto Mono',monospace; font-weight:700;
+    font-size:clamp(56px,16vw,84px);
+    color:var(--accent); text-align:center;
+    background:transparent; border:none; outline:none;
+    width:100%; caret-color:transparent;
+    font-variant-numeric:tabular-nums; letter-spacing:2px;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+    line-height:1.1; display:block;
+  }
+  .normal-time-input.dim { color:#2a2a2a; }
+  .normal-time-input:focus { caret-color:var(--accent); }
+  .normal-time-input.urgent { color:var(--hot); }
+  .normal-preset-row {
+    display:flex; gap:5px; margin-top:12px; padding:0 12px; width:100%;
+  }
+  .normal-preset-row .timer-inner-preset {
+    flex:1; white-space:nowrap; font-size:10px; padding:6px 2px;
+  }
+
+  /* ===== tap-zone カウントダウン表示（動作中のみ） ===== */
+  .timer-tap-display {
+    font-family:'Roboto Mono',monospace; font-weight:700;
+    font-size:72px; color:var(--accent); text-align:center;
+    font-variant-numeric:tabular-nums; line-height:1;
+    pointer-events:none; display:none;
+  }
+  .timer-tap-display.urgent { color:var(--hot); }
+  .timer-tap-display.countdown-num { font-size:110px; animation:cdPulse 0.5s ease infinite alternate; }
+  /* 待機中ラベル：ラップモードの tap-label と同スタイル */
+  .timer-tap-label {
+    font-family:'Roboto',sans-serif; font-weight:700; font-size:11px;
+    letter-spacing:5px; color:var(--muted); pointer-events:none;
+  }
+
   .timer-next-wrap {
     display:flex; flex-direction:column; align-items:center;
-    margin-top:10px; pointer-events:none; min-height:44px; justify-content:center;
+    margin-top:8px; padding-top:8px;
+    border-top:1px solid #2a2a2a;
+    pointer-events:none; min-height:44px; justify-content:center;
+    width:80%; transition:opacity 0.4s;
   }
+  .timer-next-wrap.faded { opacity:0.15; }
   .timer-next-prefix { font-family:'Roboto',sans-serif; font-weight:700; font-size:10px; letter-spacing:3px; color:var(--muted); margin-bottom:2px; }
-  .timer-next-name { font-family:'Noto Sans JP',sans-serif; font-weight:700; font-size:18px; color:#fff; letter-spacing:1px; }
+  .timer-next-name { font-family:'Noto Sans JP',sans-serif; font-weight:700; font-size:clamp(14px,4vw,18px); color:#fff; letter-spacing:1px; }
   .timer-next-time { font-family:'Roboto Mono',monospace; font-weight:600; font-size:13px; color:var(--accent); margin-top:1px; font-variant-numeric:tabular-nums; }
 
   /* ===== SEQUENTIAL SECTION ===== */
@@ -338,9 +393,9 @@
   .seq-panel.open { display:block; }
 
   .seq-item {
-    display:flex; align-items:center; gap:8px; padding:7px 10px; margin-bottom:4px;
+    display:flex; align-items:center; gap:0; padding:7px 0 7px 10px; margin-bottom:4px;
     background:#0d0d0d; border:1px solid var(--border); border-radius:3px;
-    position:relative; transition:border-color 0.2s;
+    position:relative; transition:border-color 0.2s; overflow:hidden;
   }
   .seq-item.current { border-color:var(--accent); background:#131300; }
   .seq-item.done { opacity:0.3; }
@@ -349,16 +404,19 @@
   .seq-name-input {
     flex:1; background:transparent; border:none; color:var(--text);
     font-family:'Noto Sans JP',sans-serif; font-size:13px; outline:none;
+    min-width:0; padding-right:8px;
   }
   .seq-name-input::placeholder { color:var(--muted); }
   .seq-time-input {
-    width:60px; background:transparent; border:none; border-bottom:1px solid var(--border);
+    width:56px; flex-shrink:0; background:transparent; border:none;
+    border-bottom:1px solid var(--border);
     color:var(--accent); font-family:'Roboto Mono',monospace; font-weight:600;
     font-size:14px; text-align:center; outline:none; font-variant-numeric:tabular-nums;
   }
   .seq-time-input:focus { border-color:var(--accent); }
-  .seq-delete { background:none; border:none; color:var(--muted); cursor:pointer; font-size:14px; padding:2px 4px; }
-  .seq-delete:hover { color:var(--hot); }
+  .seq-delete { background:none; border:none; color:var(--muted); cursor:pointer; font-size:13px; padding:7px 14px; flex-shrink:0; transition:color 0.15s; }
+  @media (hover:hover) { .seq-delete:hover { color:var(--hot); } }
+  .seq-delete:active { color:var(--hot); }
   .seq-add-btn {
     width:100%; padding:7px; margin-top:4px; background:transparent;
     border:1px dashed var(--border); color:var(--muted);
@@ -368,6 +426,228 @@
   .seq-add-btn:hover { border-color:var(--accent); color:var(--accent); }
 
   .timer-ctrl-row { display:flex; gap:1px; flex-shrink:0; }
+
+
+  /* ===== BOARD SCREEN ===== */
+  #boardScreen { background:var(--bg); }
+
+  /* BOARDモード戻るボタン */
+  .board-back-btn {
+    position: fixed;
+    top: env(safe-area-inset-top, 8px);
+    left: env(safe-area-inset-left, 8px);
+    margin: 8px;
+    z-index: 100;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.5);
+    font-size: 20px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none; /* JS で制御 */
+    align-items: center; justify-content: center;
+    transition: opacity 0.2s, background 0.2s;
+    line-height: 1;
+    padding: 0;
+  }
+  .board-back-btn:active {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+  }
+  #boardScreen.active .board-back-btn { display: flex; }
+  .board-screen {
+    flex:1; display:flex; flex-direction:column;
+    overflow:hidden; position:relative;
+  }
+
+  /* 下部コントロールバー */
+  .board-ctrl-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 16px;
+    background: rgba(0,0,0,0.6);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    flex-shrink: 0;
+    gap: 16px;
+    z-index: 10;
+    position: relative;
+  }
+  /* LAP / TIMER 切替タブ */
+  .board-src-tabs {
+    display: flex;
+    gap: 2px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 6px;
+    padding: 3px;
+  }
+  .board-src-tab {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 5px 20px;
+    border-radius: 4px;
+    background: transparent;
+    color: rgba(255,255,255,0.2);
+    cursor: default;         /* クリック不可 */
+    user-select: none;
+    transition: all 0.3s;
+  }
+  .board-src-tab.active {
+    background: var(--accent);
+    color: #000;
+    opacity: 1;
+  }
+  .board-panel {
+    flex:1; display:flex; align-items:stretch;
+    position:relative; padding:0;
+  }
+  /* 下部バー内：差分横書き */
+  .board-delta-inline {
+    flex:1;
+    display:flex; align-items:center;
+    font-family:'Roboto Mono',monospace; font-weight:900;
+    font-size:clamp(13px,2vh,20px); letter-spacing:1px;
+    font-variant-numeric:tabular-nums;
+    min-width:80px;
+  }
+  .board-delta-plus  { color:#44ee77; }
+  .board-delta-minus { color:var(--hot); }
+  .board-delta-zero  { color:#555; }
+
+  /* メインエリア */
+  .board-main {
+    flex:1; display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    padding:16px 24px;
+    gap:4px;
+  }
+  .board-lap-num {
+    font-family:'Roboto',sans-serif; font-weight:900;
+    font-size:clamp(22px,5.5vw,42px); letter-spacing:8px;
+    color:var(--accent); opacity:0.85;
+  }
+  .board-time {
+    font-family:'Roboto Mono',monospace; font-weight:700;
+    font-size:clamp(80px,26vw,200px);
+    color:var(--accent); line-height:1;
+    font-variant-numeric:tabular-nums; letter-spacing:2px;
+    transform: scaleY(1.22);
+    transform-origin: center center;
+    display:block;
+  }
+  .board-timer-time {
+    font-family:'Roboto Mono',monospace; font-weight:700;
+    font-size:clamp(80px,24vw,180px);
+    color:var(--accent); line-height:1;
+    font-variant-numeric:tabular-nums; letter-spacing:-2px;
+  }
+  .board-seg-name {
+    font-family:'Noto Sans JP',sans-serif; font-weight:900;
+    font-size:clamp(18px,5vw,36px); letter-spacing:3px;
+    color:#ccc; min-height:32px; text-align:center;
+  }
+  .board-total-wrap {
+    display:flex; align-items:baseline; gap:8px; margin-top:10px;
+    padding-top:8px; border-top:1px solid #2a2a2a;
+    opacity: 0.7;
+  }
+  .board-total-label {
+    font-family:'Roboto',sans-serif; font-weight:700;
+    font-size:clamp(9px,1.6vw,13px); letter-spacing:4px; color:#4477cc;
+  }
+  .board-total-time {
+    font-family:'Roboto Mono',monospace; font-weight:600;
+    font-size:clamp(18px,4vw,32px); color:#4488ee;
+    font-variant-numeric:tabular-nums;
+  }
+
+  /* 排他制御：衝突警告フラッシュ（赤） */
+  @keyframes conflictFlash {
+    0%   { background: rgba(255,50,50,0); }
+    20%  { background: rgba(255,50,50,0.35); }
+    100% { background: rgba(255,50,50,0); }
+  }
+  .conflict-flash {
+    animation: conflictFlash 0.5s ease-out forwards;
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+  }
+  @keyframes timerSetFlash {
+    0%   { background: rgba(220,220,0,0); }
+    20%  { background: rgba(220,220,0,0.25); }
+    100% { background: rgba(220,220,0,0); }
+  }
+  .timer-set-flash {
+    animation: timerSetFlash 0.5s ease-out forwards;
+    pointer-events: none;
+    position: fixed; inset: 0; z-index: 9999;
+  }
+  .board-ctrl-hint {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    bottom: 100%; margin-bottom: 6px;
+    font-family: Roboto, sans-serif; font-size: 11px; font-weight: 700;
+    letter-spacing: 2px; color: var(--accent);
+    opacity: 0; transition: opacity 0.15s;
+    pointer-events: none; white-space: nowrap;
+    background: rgba(0,0,0,0.7); padding: 3px 8px; border-radius: 3px;
+  }
+  .board-ctrl-hint.show { opacity: 1; }
+
+  /* DELAY インジケーター */
+  .board-delay-indicator {
+    display: flex; align-items: center; gap: 5px;
+    font-family: Roboto, sans-serif; font-size: 11px;
+    font-weight: 700; letter-spacing: 2px;
+    color: rgba(255,255,255,0.3);
+    cursor: default; user-select: none;
+  }
+  .board-delay-dot { font-size: 8px; transition: color 0.2s; }
+  .board-delay-indicator.active { color: var(--accent); }
+  .board-delay-indicator.active .board-delay-dot { color: var(--accent); animation: delayPulse 1s ease-in-out infinite; }
+  @keyframes delayPulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.2; }
+  }
+
+  /* 全画面タップゾーン（透明・最前面） */
+  .board-tap-zone {
+    position:absolute; inset:0;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:flex-end;
+    padding-bottom:12px;
+    touch-action:manipulation;
+    -webkit-user-select:none; user-select:none;
+  }
+  .board-hint {
+    font-family:'Roboto',sans-serif; font-weight:700;
+    font-size:9px; letter-spacing:2px; color:#2a2a2a;
+    pointer-events:none;
+  }
+  .board-hold-wrap {
+    width:80%; height:2px; background:#111;
+    margin-top:4px; border-radius:1px;
+  }
+  .board-hold-bar { height:100%; background:var(--hot); width:0%; border-radius:1px; }
+
+  /* 横向き推奨時の最適化 */
+  @media (orientation:landscape) {
+    /* 横向き：body幅制限を解除して全画面使用 */
+    body {
+      max-width: 100%;
+      margin: 0;
+      padding-left:  env(safe-area-inset-left, 0px);
+      padding-right: env(safe-area-inset-right, 0px);
+    }
+    .board-time        { font-size:clamp(80px,26vh,200px); }
+    .board-timer-time { font-size:clamp(100px,38vh,280px); }
+    .board-lap-num { font-size:clamp(18px,4vh,32px); }
+
+  }
 
   /* ===== POCKET MODE OVERLAY ===== */
   .pocket-overlay {
@@ -447,6 +727,162 @@
     text-align:center; color:var(--muted); font-family:'Roboto',sans-serif;
     font-weight:700; font-size:11px; letter-spacing:3px; margin-top:28px;
   }
+
+  .lap-left-panel   { display:flex; flex-direction:column; overflow-x:hidden; overflow-y:auto; flex:1; }
+  .timer-left-panel { display:flex; flex-direction:column; overflow:hidden; flex:1; border-bottom:1px solid var(--border); }
+  @media (orientation:landscape) {
+
+    /* ヘッダー：横向きで両端が広がりすぎないよう制御 */
+    .header {
+      padding: 4px clamp(16px, 3vw, 40px) 8px;
+    }
+    .mode-tabs { gap: 8px; }
+    .mode-tab  { padding: 5px 18px; }
+
+    /* ===== LAP 横向き ===== */
+    #lapScreen { flex-direction:row !important; }
+
+    /* 情報エリア：50% 固定 */
+    #lapScreen .lap-left-panel {
+      width:50%; flex:none; min-width:0;
+      border-right:1px solid var(--border);
+      overflow-x:hidden; overflow-y:auto;
+    }
+
+    /* 大タップゾーン：残り50% */
+    #lapScreen .tap-zone {
+      flex:1; min-width:0; height:auto !important;
+      border-top:none !important;
+      border-left:2px solid var(--border);
+    }
+
+    /* 横向きフォント：縦向きの比率を維持（vhベース） */
+    #lapScreen .tap-lap-box-label  { font-size:clamp(9px,1.6vh,13px) !important; }
+    #lapScreen .tap-main-time      { font-size:clamp(24px,5.5vh,44px) !important; }
+    #lapScreen .tap-total-time     { font-size:clamp(32px,7.5vh,60px) !important; }
+    #lapScreen .tap-total-label    { font-size:clamp(8px,1.4vh,11px) !important; }
+    #lapScreen .tap-delta-display  { font-size:clamp(12px,2.2vh,18px) !important; }
+
+    /* 情報エリア内フォント */
+    #lapScreen .delta-mode-name    { font-size:clamp(10px,1.8vh,14px) !important; }
+    #lapScreen .lap-row-time       { font-size:clamp(14px,2.8vh,22px) !important; }
+    #lapScreen .lap-row-delta      { font-size:clamp(10px,1.8vh,14px) !important; }
+
+    /* ===== TIMER 横向き ===== */
+    #timerScreen .timer-screen { flex-direction:row !important; }
+
+    /* 情報エリア：50% 固定（LAPと統一） */
+    #timerScreen .timer-left-panel {
+      width:50%; flex:none; min-width:0;
+      border-right:1px solid var(--border);
+      border-bottom:none;
+      overflow-x:hidden; overflow-y:auto;
+      position:relative;
+    }
+
+    /* 大タップゾーン：残り60% */
+    #timerScreen .timer-tap-zone {
+      flex:1; min-width:0; height:auto !important;
+      border-top:none !important;
+      border-left:2px solid var(--border);
+    }
+
+    /* 横向きフォント：縦向き比率維持 */
+    #timerScreen .timer-time-field  { font-size:clamp(36px,8vh,68px) !important; }
+    #timerScreen .timer-seg-current { font-size:clamp(9px,1.6vh,13px) !important; }
+    #timerScreen .timer-next-name   { font-size:clamp(12px,2.2vh,18px) !important; }
+    #timerScreen .timer-next-time   { font-size:clamp(10px,1.8vh,14px) !important; }
+    #timerScreen .timer-next-prefix { font-size:clamp(8px,1.4vh,11px) !important; }
+
+    /* タイマータブ横向きコンパクト */
+    #timerScreen .timer-mode-tabs { min-height:32px; }
+    #timerScreen .timer-mode-tab  { font-size:11px; padding:6px 4px; }
+
+    /* SEQリスト横向き：コンパクト化で4〜5件表示 */
+    #timerScreen .seq-item {
+      padding:4px 0 4px 8px !important;
+      margin-bottom:2px !important;
+    }
+    #timerScreen .seq-name-input { font-size:11px !important; }
+    #timerScreen .seq-time-input { font-size:12px !important; }
+    #timerScreen .seq-num        { font-size:9px !important; }
+    #timerScreen .seq-delete     { padding:4px 10px !important; font-size:12px !important; }
+    #timerScreen .seq-add-btn    { padding:4px !important; font-size:9px !important; margin-top:2px !important; }
+
+    /* スクロールヒント：リスト末尾にグラデーション */
+    #timerScreen .seq-list {
+      position:relative;
+      -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+      mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+    }
+
+    /* ===== 横向き：RESETを左パネル底部に絶対配置 ===== */
+    #lapScreen { position:relative; }
+    #timerScreen .timer-screen { position:relative; }
+    #lapScreen .btn-row {
+      position:absolute; bottom:0; left:0; width:50%;
+      border-right:1px solid var(--border);
+    }
+    #timerScreen .timer-ctrl-row {
+      position:absolute; bottom:0; left:0; width:50%;
+      border-right:1px solid var(--border);
+    }
+    /* 横向きでRESETの分だけ左パネルに下padding */
+    #lapScreen .lap-left-panel,
+    #timerScreen .timer-left-panel {
+      padding-bottom:44px;
+    }
+  }
+
+  /* ===== BOARD BAR INDICATOR ===== */
+  .board-bar {
+    width: 80%; height: 5px; border-radius: 3px;
+    background: #1e1e1e;
+    margin-bottom: 10px;
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+  .board-bar.running {
+    animation: barPulse 1.4s ease-in-out infinite;
+  }
+  .board-bar.holding {
+    background: #f5c040;
+    box-shadow: 0 0 12px #f5c040, 0 0 24px rgba(245,192,64,0.4);
+    animation: barHold 0.35s ease-in-out infinite;
+  }
+  .board-bar.stopped {
+    background: #1e1e1e;
+    box-shadow: none;
+    animation: none;
+  }
+  @keyframes barPulse {
+    0%,100% { background:#1a4a42; box-shadow: 0 0 4px rgba(77,216,192,0.2); }
+    50%     { background:#4dd8c0; box-shadow: 0 0 14px rgba(77,216,192,0.7), 0 0 28px rgba(77,216,192,0.3); }
+  }
+  @keyframes barHold {
+    0%,100% { background:#f5c040; box-shadow: 0 0 8px #f5c040; }
+    50%     { background:#ffe080; box-shadow: 0 0 20px #f5c040, 0 0 36px rgba(245,192,64,0.5); }
+  }
+  .board-time.running .board-colon { animation:colonBlink 1s step-end infinite; }
+  @keyframes colonBlink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* ===== TIMER MODE TABS ===== */
+  .timer-mode-tabs {
+    display:flex; flex-shrink:0;
+    border-bottom:1px solid #333; margin-bottom:4px;
+  }
+  .timer-mode-tab {
+    flex:1; padding:10px 4px; font-size:12px; font-weight:700;
+    letter-spacing:1px; text-align:center;
+    background:transparent; border:none; color:#555;
+    cursor:pointer; touch-action:manipulation;
+    user-select:none; -webkit-user-select:none;
+    transition:color 0.15s, border-bottom 0.15s;
+    border-bottom:2px solid transparent;
+  }
+  .timer-mode-tab.active {
+    color:var(--accent);
+    border-bottom:2px solid var(--accent);
+  }
 </style>
 </head>
 <body>
@@ -499,6 +935,18 @@
       <button class="opt-btn"          style="color:#aa44ff"      data-worstcolor="#aa44ff" onclick="selectWorstColor(this)">PURPLE</button>
     </div>
   </div>
+  <div class="settings-section">
+    <div class="settings-label">BOARD DELAY TIME</div>
+    <div class="option-group">
+      <button class="opt-btn" data-delay="0"  onclick="selectDelay(this)">OFF</button>
+      <button class="opt-btn" data-delay="3"  onclick="selectDelay(this)">3s</button>
+      <button class="opt-btn selected" data-delay="5"  onclick="selectDelay(this)">5s</button>
+      <button class="opt-btn" data-delay="10" onclick="selectDelay(this)">10s</button>
+      <button class="opt-btn" data-delay="15" onclick="selectDelay(this)">15s</button>
+      <button class="opt-btn" data-delay="20" onclick="selectDelay(this)">20s</button>
+    </div>
+    <div class="settings-note">ラップ確定後、表示を保持する時間。選手がボードを確認するまでの時間に合わせてください。</div>
+  </div>
   <button class="settings-close" onclick="closeSettings()">✕ CLOSE</button>
 </div>
 
@@ -511,14 +959,14 @@
 
 <!-- HEADER -->
 <div class="header">
-  <div class="logo">BLINDTAP</div>
+  <div class="logo">BTLT</div>
   <div class="mode-tabs">
     <button class="mode-tab active" onclick="switchMode('lap')">LAP</button>
     <button class="mode-tab"        onclick="switchMode('timer')">TIMER</button>
+    <button class="mode-tab"        onclick="switchMode('board')">BOARD</button>
   </div>
   <div class="header-right">
-    <button class="icon-btn" onclick="location.href='blindtap_manual.html'" title="MANUAL">❓</button>
-    
+    <button class="icon-btn" onclick="openManual()" title="MANUAL">❓</button>
     <button class="icon-btn" id="pocketBtn" onclick="enablePocket()" title="ポケットモード">🔒</button>
     <button class="icon-btn active-icon" id="voiceToggleBtn" onclick="toggleVoice()">🔊</button>
     <button class="icon-btn" onclick="openSettings()">⚙️</button>
@@ -527,47 +975,45 @@
 
 <!-- ==================== LAP SCREEN ==================== -->
 <div class="screen active" id="lapScreen">
-  <div class="delta-bar" ontouchstart="swipeStart(event)" ontouchend="swipeEnd(event)">
-    <span class="delta-arrow" onclick="cycleDeltaMode(-1)">◀</span>
-    <div class="delta-inner">
-      <span class="delta-mode-name" id="deltaModeLabel">目標タイム差</span>
-      <div class="target-wrap" id="targetRow">
-        <span class="delta-target-label">目標</span>
-        <input class="target-input" id="targetInput" value="2:13.000"
-               onclick="event.stopPropagation()" onchange="updateTarget()">
+  <div class="lap-left-panel">
+    <div class="delta-bar" ontouchstart="swipeStart(event)" ontouchend="swipeEnd(event)">
+      <span class="delta-arrow" onclick="cycleDeltaMode(-1)">◀</span>
+      <div class="delta-inner">
+        <span class="delta-mode-name" id="deltaModeLabel">目標タイム差</span>
+        <div class="target-wrap" id="targetRow">
+          <span class="delta-target-label">目標</span>
+          <input class="target-input" id="targetInput" value="0:00.000"
+                 inputmode="decimal" autocomplete="off" autocorrect="off"
+                 onclick="event.stopPropagation()"
+                 onfocus="this.select()"
+                 onchange="updateTarget()">
+        </div>
+        <span class="delta-hint">◀ スワイプ ▶</span>
       </div>
-      <span class="delta-hint">◀ スワイプ ▶</span>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+        <span class="delta-arrow" onclick="cycleDeltaMode(1)">▶</span>
+        <div class="lap-count-badge" id="lapCount">LAP 0</div>
+      </div>
     </div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
-      <span class="delta-arrow" onclick="cycleDeltaMode(1)">▶</span>
-      <div class="lap-count-badge" id="lapCount">LAP 0</div>
+    <div class="lap-list-area" id="lapList">
+      <div class="no-data" id="noDataMsg"></div>
     </div>
   </div>
-
-  <div class="lap-list-area" id="lapList">
-    <div class="no-data" id="noDataMsg">TAP TO START</div>
-  </div>
-
   <div class="tap-zone"
        ontouchstart="onTapStart(event)" ontouchend="onTapEnd(event)"
        onmousedown="onTapStart(event)"  onmouseup="onTapEnd(event)"
        onmouseleave="onTapCancel()">
-    <!-- 上：ラップタイム（小・青・ボックス） -->
     <div class="tap-lap-box" id="tapLapBox">
       <div class="tap-lap-box-label">LAP TIME</div>
       <div class="tap-main-time" id="tapTime">00:00.000</div>
       <div class="tap-delta-display" id="tapDeltaDisplay"></div>
     </div>
-    <!-- 下：トータルタイム（大・黄・ボックス） -->
     <div class="tap-total-wrap" id="tapTotalWrap" style="display:flex;">
       <div class="tap-total-time" id="tapTotalTime">00:00.000</div>
       <div class="tap-total-label">TOTAL TIME</div>
     </div>
-    <div class="tap-label" id="tapLabel">TAP TO START</div>
-    <div class="tap-hint">HOLD 1s = STOP</div>
     <div class="hold-bar-wrap"><div class="hold-bar" id="holdBar"></div></div>
   </div>
-
   <div class="btn-row">
     <button class="ctrl-btn reset" onclick="resetLap()">RESET</button>
   </div>
@@ -576,62 +1022,125 @@
 <!-- ==================== TIMER SCREEN ==================== -->
 <div class="screen" id="timerScreen">
   <div class="timer-screen">
-
-    <!-- シーケンシャルリスト（v5と同じ） -->
-    <div class="seq-list" id="seqList"></div>
-    <div style="padding:0 14px 6px">
-      <button class="seq-add-btn" onclick="addSeqItem()">＋ セグメント追加</button>
+    <div class="timer-left-panel">
+      <!-- モード切替タブ -->
+      <div class="timer-mode-tabs" id="timerModeTabs">
+        <button class="timer-mode-tab active" id="tabNormal"
+                ontouchstart="event.preventDefault();setTimerMode('normal')"
+                onclick="setTimerMode('normal')">通常</button>
+        <button class="timer-mode-tab" id="tabSeq"
+                ontouchstart="event.preventDefault();setTimerMode('seq')"
+                onclick="setTimerMode('seq')">⚡ SEQ</button>
+      </div>
+      <!-- SEQコンテンツ（モード切替で表示/非表示） -->
+      <div id="seqContent" style="display:none; flex-direction:column; flex:1; overflow:hidden;">
+        <div class="seq-list" id="seqList"></div>
+        <div style="padding:0 14px 6px">
+          <button class="seq-add-btn" onclick="addSeqItem()">＋ セグメント追加</button>
+        </div>
+      </div>
+      <!-- 通常モード：入力フィールドを情報エリアに表示 -->
+      <div id="normalContent" style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 0 8px;">
+        <div class="normal-time-hint" id="normalTimeHint">タップして時間を設定</div>
+        <input class="normal-time-input" id="timerDisplay"
+               type="tel" inputmode="numeric" placeholder="00:00" readonly
+               ontouchstart="onTimerFieldTouch(event)"
+               oninput="onTimerFieldInput(event)"
+               onblur="onTimerFieldBlur(event)"
+               onclick="event.stopPropagation()">
+        <div class="normal-preset-row" id="normalPresets">
+          <button class="timer-inner-preset" onclick="timerPreset(1,event)">1分</button>
+          <button class="timer-inner-preset" onclick="timerPreset(3,event)">3分</button>
+          <button class="timer-inner-preset" onclick="timerPreset(5,event)">5分</button>
+          <button class="timer-inner-preset" onclick="timerPreset(10,event)">10分</button>
+        </div>
+      </div>
     </div>
-
-    <!-- 大タップゾーン（v5と同じ構造＋プリセット＋隠しinput） -->
     <div class="timer-tap-zone"
          onmousedown="timerTapZoneDown(event)"
          ontouchstart="timerTapZoneDown(event)"
          onmouseup="timerTapZoneUp(event)"
          ontouchend="timerTapZoneUp(event)"
          onmouseleave="timerTapCancel()">
-
-      <!-- プリセット4個（上部固定） -->
-      <div class="timer-inner-presets" id="timerPresets">
-        <button class="timer-inner-preset" onclick="timerPreset(1,event)">1分</button>
-        <button class="timer-inner-preset" onclick="timerPreset(3,event)">3分</button>
-        <button class="timer-inner-preset" onclick="timerPreset(5,event)">5分</button>
-        <button class="timer-inner-preset" onclick="timerPreset(10,event)">10分</button>
-      </div>
-
-      <!-- 現在セグメント名（実行中のみ表示） -->
       <div class="timer-seg-current" id="timerSegCurrent"></div>
-
-      <!-- ★ 時間入力：inputそのものをbig表示と同じスタイルに -->
-      <input class="timer-time-field dim" id="timerDisplay"
-             type="tel" inputmode="numeric"
-             placeholder="00:00"
-             readonly
-             ontouchstart="onTimerFieldTouch(event)"
-             oninput="onTimerFieldInput(event)"
-             onblur="onTimerFieldBlur(event)"
-             onclick="event.stopPropagation()">
-
-      <!-- シーケンシャルモードトグル（待機中のみ表示） -->
-      <div class="seq-mode-toggle" id="seqModeToggle" ontouchstart="toggleSeqMode(event)" onclick="toggleSeqMode(event)">
-        <div class="seq-mode-dot" id="seqModeDot"></div>
-        <div class="seq-mode-label" id="seqModeLabel">シーケンシャルモード</div>
-      </div>
-
-      <!-- 次セグメント（実行中／初期案内） -->
+      <div class="timer-tap-display" id="timerTapDisplay"></div>
+      <div class="timer-tap-label"   id="timerTapLabel">TAP TO START</div>
       <div class="timer-next-wrap" id="timerNextWrap">
         <div class="timer-next-prefix" id="timerNextPrefix"></div>
-        <div class="timer-next-name"   id="timerNextName">タップして時間を設定</div>
+        <div class="timer-next-name"   id="timerNextName"></div>
         <div class="timer-next-time"   id="timerNextTime"></div>
       </div>
-
-      <div class="tap-hint">HOLD 1s = RESET</div>
       <div class="hold-bar-wrap"><div class="hold-bar" id="timerHoldBar"></div></div>
     </div>
-
     <div class="timer-ctrl-row">
       <button class="ctrl-btn reset" onclick="timerReset()">RESET</button>
     </div>
+  </div>
+</div>
+
+<!-- ==================== BOARD SCREEN ==================== -->
+<div class="screen" id="boardScreen">
+  <!-- BOARDモード専用：戻るボタン -->
+  <button class="board-back-btn" onclick="switchMode(previousMode)" title="戻る">&#8592;</button>
+  <div class="board-screen">
+
+    <!-- LAP BOARD -->
+    <div class="board-panel" id="boardLapPanel">
+      <!-- メインコンテンツ -->
+      <div class="board-main">
+        <div class="board-bar" id="boardBar"></div>
+        <div class="board-lap-num" id="boardLapNum">LAP 0</div>
+        <div class="board-time" id="boardLapTime">00:00.000</div>
+        <div class="board-total-wrap">
+          <span class="board-total-label">TOTAL</span>
+          <span class="board-total-time" id="boardTotalTime">00:00.000</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIMER BOARD -->
+    <div class="board-panel" id="boardTimerPanel" style="display:none;">
+      <div class="board-main">
+        <div class="board-bar" id="boardTimerBar"></div>
+        <div class="board-seg-name" id="boardSegName"></div>
+        <div class="board-timer-time" id="boardTimerTime">--:--</div>
+        <div class="board-total-wrap">
+          <span class="board-total-label" id="boardNextLabel">NEXT</span>
+          <span class="board-total-time" id="boardNextName"></span>
+          <span class="board-total-time" id="boardNextTime" style="color:var(--accent);"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 下部コントロールバー -->
+    <div class="board-ctrl-bar" id="boardCtrlBar">
+      <!-- 左：差分表示 -->
+      <div class="board-delta-inline" id="boardDelta"></div>
+      <!-- 中央：LAP/TIMER切替 -->
+      <div class="board-src-tabs">
+        <div class="board-src-tab active" id="boardTabLap">LAP</div>
+        <div class="board-src-tab" id="boardTabTimer">TIMER</div>
+      </div>
+      <div class="board-delay-indicator" id="boardDelayIndicator">
+        <span class="board-delay-dot" id="boardDelayDot">●</span>
+        <span class="board-delay-label" id="boardDelayLabel">NORMAL</span>
+      </div>
+      <!-- 右：スペーサー（左右バランス） -->
+      <div class="board-delta-inline" style="visibility:hidden" aria-hidden="true"></div>
+      <div class="board-ctrl-hint" id="boardCtrlHint"></div>
+    </div>
+
+    <!-- 全画面タップゾーン -->
+    <div class="board-tap-zone"
+         ontouchstart="boardTapStart(event)"
+         ontouchend="boardTapEnd(event)"
+         onmousedown="boardTapStart(event)"
+         onmouseup="boardTapEnd(event)"
+         onmouseleave="boardTapCancel()">
+      <div class="board-hint">TAP = LAP &nbsp;|&nbsp; HOLD 1s = STOP</div>
+      <div class="board-hold-wrap"><div class="board-hold-bar" id="boardHoldBar"></div></div>
+    </div>
+
   </div>
 </div>
 
@@ -751,14 +1260,31 @@ document.addEventListener('visibilitychange',()=>{
 });
 
 // ===== TTS =====
-let ttsBusy=false, ttsQ=[];
+let ttsBusy=false, ttsQ=[], ttsBusyTimer=null;
+
+// iOS Safari: speechSynthesisが時間経過でフリーズするのを防ぐ定期resume
+if(window.speechSynthesis) {
+  setInterval(()=>{
+    if(speechSynthesis.paused) speechSynthesis.resume();
+  }, 5000);
+}
+
+// iOS Safari workaround: cancel→少し待ってspeak
+function iosSafeSpeak(u) {
+  if(!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  // iOSはcancel直後のspeakが無視されるため少し待つ
+  setTimeout(()=>{
+    if(speechSynthesis.paused) speechSynthesis.resume();
+    speechSynthesis.speak(u);
+  }, 50);
+}
+
 function speakRaw(text,rate=1.1,pitch=1.0) {
   if(!window.speechSynthesis) return;
-  // iOS: speechSynthesis が paused 状態のとき resume してから話す
-  if(speechSynthesis.paused) speechSynthesis.resume();
   const u=new SpeechSynthesisUtterance(text);
-  u.lang='ja-JP'; u.rate=rate; u.pitch=pitch; u.volume=0.95;
-  speechSynthesis.cancel(); speechSynthesis.speak(u);
+  u.lang='ja-JP'; u.rate=rate; u.pitch=pitch; u.volume=1.0;
+  iosSafeSpeak(u);
 }
 function speakQ(text,rate=1.05,pitch=1.0) {
   if(!voiceEnabled||!window.speechSynthesis) return;
@@ -767,20 +1293,24 @@ function speakQ(text,rate=1.05,pitch=1.0) {
 function drainTTS() {
   if(ttsBusy||!ttsQ.length) return;
   ttsBusy=true;
+  // タイムアウト保険：3秒で強制解除（onend未発火対策）
+  ttsBusyTimer=setTimeout(()=>{ ttsBusy=false; drainTTS(); }, 3000);
   const {text,rate,pitch}=ttsQ.shift();
-  // iOS: pausedなら再開してから
-  if(speechSynthesis.paused) speechSynthesis.resume();
   const u=new SpeechSynthesisUtterance(text);
-  u.lang='ja-JP'; u.rate=rate; u.pitch=pitch; u.volume=0.95;
-  u.onend=u.onerror=()=>{ ttsBusy=false; drainTTS(); };
+  u.lang='ja-JP'; u.rate=rate; u.pitch=pitch; u.volume=1.0;
+  u.onend=u.onerror=()=>{
+    clearTimeout(ttsBusyTimer);
+    ttsBusy=false; drainTTS();
+  };
+  if(speechSynthesis.paused) speechSynthesis.resume();
   speechSynthesis.speak(u);
 }
 function speakCountdown(n) {
   if(!voiceEnabled||!window.speechSynthesis) return;
-  speechSynthesis.cancel();
+  ttsQ=[]; ttsBusy=false; clearTimeout(ttsBusyTimer);
   const u=new SpeechSynthesisUtterance(String(n));
   u.lang='ja-JP'; u.rate=1.3; u.pitch=0.85; u.volume=1.0;
-  speechSynthesis.speak(u);
+  iosSafeSpeak(u);
 }
 function speakDelta(deltaMs) {
   if(!voiceEnabled) return;
@@ -856,11 +1386,28 @@ function handlePocketTap(e) {
 }
 
 // ===================== MODE SWITCH =====================
+let previousMode = 'lap'; // BOARDから戻る先
+
 function switchMode(mode) {
+  // BOARD以外のモードなら直前モードとして記憶
+  if(mode !== 'board') previousMode = mode;
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById(mode==='lap'?'lapScreen':'timerScreen').classList.add('active');
-  document.querySelectorAll('.mode-tab')[mode==='lap'?0:1].classList.add('active');
+  const screenId = mode==='lap'?'lapScreen': mode==='timer'?'timerScreen':'boardScreen';
+  const tabIdx   = mode==='lap'?0: mode==='timer'?1:2;
+  document.getElementById(screenId).classList.add('active');
+  document.querySelectorAll('.mode-tab')[tabIdx].classList.add('active');
+  // BOARDモード：ヘッダー・日時バーを隠す
+  const isBoard = mode === 'board';
+  document.querySelector('.datetime-bar').style.display = isBoard ? 'none' : '';
+  document.querySelector('.header').style.display       = isBoard ? 'none' : '';
+  if(mode==='board') updateBoardMode();
+}
+// 現在どちらのモードでボードを使うか判定
+function getBoardSourceMode() {
+  // timerRunning中ならtimer、それ以外はlap
+  return (seqRunning || document.getElementById('timerDisplay').value !== '00:00' && document.getElementById('timerDisplay').value !== '')
+    ? 'timer' : 'lap';
 }
 
 // ===================== SETTINGS =====================
@@ -910,9 +1457,9 @@ function swipeEnd(e) {
 }
 
 // ===================== LAP STOPWATCH =====================
-let lapRunning=false, lapStartTime=0, laps=[], lapRaf;
+let lapRunning=false, holdFreezeMs=null, lapStartTime=0, laps=[], lapRaf;
 let holdTimer=null, isHolding=false;
-let targetMs=parseTimeStr('2:13.000');
+let targetMs=parseTimeStr('0:00.000');
 
 function parseTimeStr(s) {
   if(!s) return 0; s=s.trim();
@@ -925,6 +1472,13 @@ function formatMs(ms) {
   if(ms<0) ms=0;
   const tot=Math.floor(ms/1000);
   return `${String(Math.floor(tot/60)).padStart(2,'0')}:${String(tot%60).padStart(2,'0')}.${String(Math.floor(ms%1000)).padStart(3,'0')}`;
+}
+// ボード専用：1/10秒表示（00:05.2）
+function formatMsTenth(ms) {
+  if(ms<0) ms=0;
+  const tot=Math.floor(ms/1000);
+  const tenth=Math.floor((ms%1000)/100);
+  return `${String(Math.floor(tot/60)).padStart(2,'0')}:${String(tot%60).padStart(2,'0')}.${tenth}`;
 }
 function formatDelta(ms) { return `${ms>=0?'+':'-'}${(Math.abs(ms)/1000).toFixed(2)}s`; }
 function getDeltaRef(idx,minMs) {
@@ -939,10 +1493,12 @@ function lapTick() {
   const total=Date.now()-lapStartTime;
   const prev=laps.reduce((a,l)=>a+l.ms,0);
   const cur=total-prev;
-  document.getElementById('tapTime').textContent=formatMs(cur);
-  // トータルタイム：スタートから常に更新
-  const tt=document.getElementById('tapTotalTime');
-  if(tt) tt.textContent=formatMs(total);
+  // ★ ホールド中は表示を凍結（タップ瞬間のタイムで止める）
+  if(!holdFreezeMs) {
+    document.getElementById('tapTime').textContent=formatMs(cur);
+    const tt=document.getElementById('tapTotalTime');
+    if(tt) tt.textContent=formatMs(total);
+  }
   if(laps.length>0&&DELTA_MODES[deltaIdx].key!=='none') {
     const minMs=Math.min(...laps.map(l=>l.ms));
     const ref=getDeltaRef(laps.length,minMs);
@@ -957,13 +1513,15 @@ function lapTick() {
 }
 
 function startLap() {
+  // 排他制御：タイマー動作中はLAP開始を拒否
+  if(seqRunning) { showConflictFlash(); return; }
   if(!lapRunning) {
     lapRunning=true;
     lapStartTime=Date.now()-laps.reduce((a,l)=>a+l.ms,0);
-    document.getElementById('tapLabel').textContent='TAP = LAP';
+    const _tl=document.getElementById('tapLabel'); if(_tl) _tl.textContent='TAP = LAP';
     const nd=document.getElementById('noDataMsg');
     if(nd) nd.style.display='none';
-    playStart(); vibrate(50); requestWakeLock(); lapTick();
+    playStart(); vibrate(50); requestWakeLock(); lapTick(); setBoardIndicator("running");
   }
 }
 function resetLap() {
@@ -973,10 +1531,16 @@ function resetLap() {
   document.getElementById('tapTotalTime').textContent='00:00.000';
   document.getElementById('tapTotalWrap').style.display='flex';
   document.getElementById('tapDeltaDisplay').textContent='';
-  document.getElementById('tapLabel').textContent='TAP TO START';
+  const _tl=document.getElementById('tapLabel'); if(_tl) _tl.textContent='TAP TO START';
   document.getElementById('lapCount').textContent='LAP 0';
   document.getElementById('holdBar').style.width='0%';
-  document.getElementById('lapList').innerHTML='<div class="no-data" id="noDataMsg">TAP TO START</div>';
+  document.getElementById('lapList').innerHTML='<div class="no-data" id="noDataMsg"></div>';
+  // BOARDリセット
+  document.getElementById('boardLapNum').textContent='LAP 0';
+  document.getElementById('boardLapTime').textContent='--:--.--';
+  document.getElementById('boardTotalTime').textContent='--:--.-';
+  document.getElementById('boardDelta').innerHTML='';
+  setBoardIndicator('ready');
 }
 function doLap() {
   if(!lapRunning) return;
@@ -990,6 +1554,7 @@ function doLap() {
   else if(k==='prev'&&laps.length>1) speakDelta(lapMs-laps[laps.length-2].ms);
   else if(k==='best'&&laps.length>1) speakDelta(lapMs-minMs);
   renderLaps();
+  showBoardLapResult();
 }
 function doStopLap() {
   if(!lapRunning) return;
@@ -1004,9 +1569,10 @@ function doStopLap() {
   laps.push({ms:lapMs});
   playStop(); vibrate([50,30,50]); flash();
   document.getElementById('lapCount').textContent=`LAP ${laps.length}`;
-  document.getElementById('tapLabel').textContent='STOPPED';
+  const _tl=document.getElementById('tapLabel'); if(_tl) _tl.textContent='STOPPED';
   document.getElementById('tapDeltaDisplay').textContent='';
   releaseWakeLock(); renderLaps();
+  showBoardLapResult(); setBoardIndicator('stopped');
 }
 function renderLaps() {
   const list=document.getElementById('lapList');
@@ -1033,22 +1599,28 @@ function renderLaps() {
 
 function onTapStart(e) {
   e.preventDefault();
+  // 排他制御：タイマー動作中はLAP操作を拒否
+  if(seqRunning) { showConflictFlash(); return; }
   if(!lapRunning){ startLap(); return; }
   playTap(); vibrate(30);
   isHolding=false;
+  holdFreezeMs=Date.now(); // ★ タップ瞬間に表示凍結
+  setBoardIndicator("holding");
   const bar=document.getElementById('holdBar');
   bar.style.width='0%';
   const t0=Date.now();
   holdTimer=setInterval(()=>{
     const el=Date.now()-t0;
-    bar.style.width=Math.min(100,(el/1000)*100)+'%';
-    if(el>=1000){ clearInterval(holdTimer); holdTimer=null; isHolding=true; doStopLap(); bar.style.width='0%'; }
+    bar.style.width=Math.min(100,(el/500)*100)+'%';
+    if(el>=500){ clearInterval(holdTimer); holdTimer=null; isHolding=true; holdFreezeMs=null; doStopLap(); bar.style.width='0%'; }
   },16);
 }
 function onTapEnd(e) {
   e.preventDefault();
   if(holdTimer){ clearInterval(holdTimer); holdTimer=null; document.getElementById('holdBar').style.width='0%'; if(!isHolding) doLap(); }
   isHolding=false;
+  holdFreezeMs=null; // ★ 凍結解除
+  if(lapRunning) setBoardIndicator("running");
 }
 function onTapCancel() {
   if(holdTimer){ clearInterval(holdTimer); holdTimer=null; document.getElementById('holdBar').style.width='0%'; }
@@ -1076,16 +1648,19 @@ function getKpMs()    { return getInputMs(); }
 // 表示更新
 function updateTimerSetDisplay() {
   const disp = document.getElementById('timerDisplay');
-  const hint = document.getElementById('timerNextName');
   if(!disp||seqRunning) return;
+  const hint = document.getElementById('normalTimeHint');
+  const tapL = document.getElementById('timerTapLabel');
   if(timerDigits.length===0) {
-    disp.className='timer-time-field dim';
+    disp.className='normal-time-input dim';
     disp.value='';
     if(hint) hint.textContent='タップして時間を設定';
+    if(tapL) tapL.textContent='TAP TO START';
   } else {
-    disp.className='timer-time-field';
+    disp.className='normal-time-input';
     disp.value=digitsToMMSS(timerDigits);
-    if(hint) hint.textContent='TAP TO START';
+    if(hint) hint.textContent='';
+    if(tapL) tapL.textContent='TAP TO START';
   }
 }
 
@@ -1113,12 +1688,12 @@ function onTimerFieldInput(e) {
   while(timerDigits.length>1&&timerDigits[0]===0) timerDigits.shift();
   // フォーマット表示
   if(timerDigits.length===0){
-    inp.value=''; inp.className='timer-time-field dim';
-    document.getElementById('timerNextName').textContent='タップして時間を設定';
+    inp.value=''; inp.className='normal-time-input dim';
+    const _h=document.getElementById('normalTimeHint'); if(_h) _h.textContent='タップして時間を設定';
   } else {
     inp.value=digitsToMMSS(timerDigits);
-    inp.className='timer-time-field';
-    document.getElementById('timerNextName').textContent='TAP TO START';
+    inp.className='normal-time-input';
+    const _h=document.getElementById('normalTimeHint'); if(_h) _h.textContent='';
   }
   // カーソル末尾
   const l=inp.value.length; inp.setSelectionRange(l,l);
@@ -1142,37 +1717,54 @@ function timerPreset(min, e) {
 }
 
 // ★ シーケンシャルモードトグル
+function updateSeqNextDisplay() { /* SEQモード切替時の次セグメント表示更新 */ }
+function setTimerMode(mode) {
+  if(seqRunning) return;
+  const wasSeq = seqModeActive;
+  seqModeActive = (mode === 'seq');
+
+  // タブのアクティブ状態
+  const tabN = document.getElementById('tabNormal');
+  const tabS = document.getElementById('tabSeq');
+  if(tabN) tabN.className = 'timer-mode-tab' + (seqModeActive ? '' : ' active');
+  if(tabS) tabS.className = 'timer-mode-tab' + (seqModeActive ? ' active' : '');
+
+  // コンテンツ表示切替
+  const seqContent    = document.getElementById('seqContent');
+  const normalContent = document.getElementById('normalContent');
+  if(seqContent)    { seqContent.style.display    = seqModeActive ? 'flex' : 'none'; seqContent.style.flexDirection='column'; seqContent.style.flex='1'; }
+  if(normalContent) { normalContent.style.display = seqModeActive ? 'none' : 'flex'; }
+
+  const nextWrap= document.getElementById('timerNextWrap');
+  if(seqModeActive) {
+    timerDigits=[];
+    renderSeqList();
+    updateSeqNextDisplay();
+  } else {
+    timerDigits=[];
+    updateTimerSetDisplay();
+    if(nextWrap){ nextWrap.style.visibility='visible'; }
+    const prefix = document.getElementById('timerNextPrefix');
+    const name   = document.getElementById('timerNextName');
+    const time   = document.getElementById('timerNextTime');
+    if(prefix) prefix.textContent='';
+    if(name)   name.textContent='';
+    if(time)   time.textContent='';
+  }
+}
+
+// 旧toggleSeqMode → setTimerModeに委譲（後方互換）
 function toggleSeqMode(e) {
   if(e) e.stopPropagation();
-  if(seqRunning) return;
-  seqModeActive=!seqModeActive;
-  const dot     = document.getElementById('seqModeDot');
-  const lbl     = document.getElementById('seqModeLabel');
-  const btn     = document.getElementById('seqModeToggle');
-  const seqSec  = document.getElementById('seqSection');
-  if(seqModeActive) {
-    dot.className = 'seq-mode-dot active';
-    lbl.className = 'seq-mode-label active';
-    lbl.textContent = '⚡ シーケンシャルモード';
-    btn.classList.add('active');
-    if(seqSec){ seqSec.style.display='block'; seqSec.style.animation='fadeIn 0.2s ease'; }
-  } else {
-    dot.className = 'seq-mode-dot';
-    lbl.className = 'seq-mode-label';
-    lbl.textContent = 'シーケンシャルモード';
-    btn.classList.remove('active');
-    if(seqSec){ seqSec.style.display='none'; }
-  }
+  setTimerMode(seqModeActive ? 'normal' : 'seq');
 }
 
 // ===================== SEQUENTIAL TIMER =====================
 let seqItems=[
-  { name:'ウォームアップ', time:'3:00' },
-  { name:'メインセット',   time:'5:00' },
-  { name:'クールダウン',   time:'2:00' },
+  { name:'', time:'00:00' },
 ];
 let seqRunning=false, seqIdx=0, seqStartTime=0, seqRaf;
-let seqDone=false, lastCd=-1;
+let seqDone=false, lastCd=-1, lastNextAnnounced=-1;
 let timerHoldTimer=null, timerHolding=false;
 let seqMode=false;  // シーケンシャルモード中かどうか
 
@@ -1189,36 +1781,83 @@ function renderSeqList() {
     return `<div class="seq-item ${cls}">
       ${i===seqIdx&&seqRunning?'<div class="current-marker"></div>':''}
       <div class="seq-num">${i+1}</div>
-      <input class="seq-name-input" value="${item.name}" placeholder="名前"
+      <input class="seq-name-input" value="${item.name}" placeholder="セグメント${i+1}"
              onchange="seqItems[${i}].name=this.value" onclick="event.stopPropagation()">
-      <input class="seq-time-input" value="${item.time}" placeholder="3:00"
-             onchange="seqItems[${i}].time=this.value" onclick="event.stopPropagation()">
+      <input class="seq-time-input" value="${item.time}" placeholder="0:00" inputmode="numeric"
+             onchange="seqItems[${i}].time=this.value" onclick="event.stopPropagation()" onfocus="setTimeout(()=>this.select(),50)">
       <button class="seq-delete" onclick="removeSeqItem(${i})">✕</button>
     </div>`;
   }).join('');
 }
-function addSeqItem() { seqItems.push({name:`セグメント${seqItems.length+1}`,time:'2:00'}); renderSeqList(); }
+function addSeqItem() { seqItems.push({name:'',time:'00:00'}); renderSeqList(); }
 function removeSeqItem(i) { seqItems.splice(i,1); renderSeqList(); }
 
 // タイマーUIの切替：実行中⇔待機中
 function showTimerRunning(yes) {
+  const inputArea = document.getElementById('normalContent');
+  const tapDisp   = document.getElementById('timerTapDisplay');
+  const tapLabel  = document.getElementById('timerTapLabel');
+  // 動作中は情報エリア非表示、停止時に戻す（opacityでなくdisplayで制御）
+  if(!yes && inputArea) {
+    inputArea.style.display = seqModeActive ? 'none' : 'flex';
+    inputArea.style.opacity = '1';
+  }
+  // 動作中：カウントダウン表示ON・ラベルOFF
+  if(tapDisp) tapDisp.style.display = yes ? 'block' : 'none';
+  if(tapLabel) tapLabel.style.display = yes ? 'none' : '';
+  if(!yes) {
+    // 停止時：カウントダウン表示リセット
+    if(tapDisp){ tapDisp.textContent=''; tapDisp.className='timer-tap-display'; }
+    if(tapLabel) tapLabel.textContent='TAP TO START';
+    if(timerDigits.length===0){
+      const hint=document.getElementById('normalTimeHint');
+      if(hint) hint.textContent='タップして時間を設定';
+    }
+  }
   const presets  = document.getElementById('timerPresets');
   const toggle   = document.getElementById('seqModeToggle');
   const seqSec   = document.getElementById('seqSection');
   const disp     = document.getElementById('timerDisplay');
   if(yes) {
-    if(presets) presets.style.visibility='hidden';
-    if(toggle)  toggle.style.display='none';
-    if(seqSec)  seqSec.style.display='none';
-    // inputを非表示にして timer-big クラスで残り時間を表示
-    if(disp){ disp.setAttribute('readonly',''); disp.style.pointerEvents='none'; }
+    // 動作中：情報エリア全体を非表示（timerDisplayの二重表示を防ぐ）
+    if(inputArea) inputArea.style.display = 'none';
+    if(tapDisp) tapDisp.style.display = 'block';
+    if(tapLabel) tapLabel.style.display = 'none';
+    const tabs = document.getElementById('timerModeTabs');
+    if(tabs) tabs.style.display='none';
   } else {
-    if(presets) presets.style.visibility='visible';
-    if(toggle)  toggle.style.display='flex';
-    if(seqSec)  seqSec.style.display=seqModeActive?'block':'none';
-    if(disp){ disp.style.pointerEvents=''; }
-    updateTimerSetDisplay();
+    const tabs2 = document.getElementById('timerModeTabs');
+    if(tabs2) tabs2.style.display='flex';
+    if(toggle)  toggle.style.display='none'; // 旧トグルは非表示
+    if(seqSec)  seqSec.style.display='none';
+    // モードに応じて表示を復元
+    setTimerMode(seqModeActive ? 'seq' : 'normal');
   }
+}
+
+// ===== TIMER未設定ヒント =====
+function showTimerSetHint() {
+  const el = document.createElement("div");
+  el.className = "timer-set-flash";
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 520);
+  vibrate(40);
+  const hint = document.getElementById("boardCtrlHint");
+  if(!hint) return;
+  hint.textContent = "← TIMERを設定してください";
+  hint.classList.add("show");
+  clearTimeout(boardCtrlHintTimer);
+  boardCtrlHintTimer = setTimeout(() => hint.classList.remove("show"), 2000);
+}
+
+// ===== 排他制御：衝突警告フラッシュ =====
+function showConflictFlash() {
+  const el = document.createElement('div');
+  el.className = 'conflict-flash';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 520);
+  // 短いバズ
+  vibrate([30, 20, 30]);
 }
 
 function timerStartStop() {
@@ -1231,7 +1870,7 @@ function timerStartStop() {
       seqMode=true;
       seqRunning=true;
       if(seqDone){ seqIdx=0; seqDone=false; }
-      seqStartTime=Date.now(); lastCd=-1;
+      seqStartTime=Date.now(); lastCd=-1; lastNextAnnounced=-1;
       showTimerRunning(true);
       document.getElementById('timerSegCurrent').textContent='';
       document.getElementById('timerNextWrap').style.visibility='hidden';
@@ -1245,7 +1884,7 @@ function timerStartStop() {
       seqItems=[{ name:'', time:'' }]; // ダミー
       seqIdx=0; seqDone=false;
       simpleRemainMs=ms; simpleStartTime=Date.now();
-      seqStartTime=Date.now(); lastCd=-1;
+      seqStartTime=Date.now(); lastCd=-1; lastNextAnnounced=-1;
       showTimerRunning(true);
       document.getElementById('timerSegCurrent').textContent='';
       document.getElementById('timerNextWrap').style.visibility='hidden';
@@ -1277,20 +1916,31 @@ function simpleTick() {
     else        { playCdHigh(); }
   }
 
+  const td=document.getElementById('timerTapDisplay');
   if(secs<=5&&remain>0) {
-    disp.value=String(secs); disp.className='timer-time-field urgent countdown-num';
+    disp.value=String(secs); disp.className='normal-time-input urgent countdown-num';
+    if(td){td.textContent=String(secs); td.className='timer-tap-display urgent countdown-num';}
+    updateBoardTimer(String(secs),'','');
   } else if(secs<=10&&remain>0) {
-    disp.value=String(secs); disp.className='timer-time-field urgent';
+    disp.value=String(secs); disp.className='normal-time-input urgent';
+    if(td){td.textContent=String(secs); td.className='timer-tap-display urgent';}
+    updateBoardTimer(String(secs),'','');
   } else {
-    const m=Math.floor(remain/60000), s=Math.floor((remain%60000)/1000);
-    disp.value=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; disp.className='timer-time-field';
+    const totalSecs = Math.ceil(remain/1000);
+    const m = Math.floor(totalSecs/60), s = totalSecs % 60;
+    const mmss=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    disp.value=mmss; disp.className='normal-time-input';
+    if(td){td.textContent=mmss; td.className='timer-tap-display';}
+    updateBoardTimer(mmss, '', '');
   }
 
   if(remain<=0) {
     seqRunning=false;
-    disp.value='DONE'; disp.className='timer-time-field urgent';
+    disp.value='DONE'; disp.className='normal-time-input urgent';
+    const _td2=document.getElementById('timerTapDisplay');
+    if(_td2){_td2.textContent='DONE';_td2.className='timer-tap-display urgent';}
+    updateBoardTimer('DONE','','');
     playStop(); speakDone(); vibrate([100,50,100]);
-    // reset
     showTimerRunning(false);
     releaseWakeLock();
     return;
@@ -1311,13 +1961,16 @@ function updateSeqDisplay(remain,secs) {
     disp.value=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; disp.className='timer-time-field';
   }
   document.getElementById('timerSegCurrent').textContent=seqItems[seqIdx].name||'';
+  const nxtWrap=document.getElementById('timerNextWrap');
+  // 残り5秒以下は次セグ表示をフェード（集中を妨げない）
+  if(nxtWrap) nxtWrap.classList.toggle('faded', secs<=5);
   if(nxtItem) {
-    document.getElementById('timerNextWrap').style.visibility='visible';
+    nxtWrap.style.visibility='visible';
     document.getElementById('timerNextPrefix').textContent='NEXT';
     document.getElementById('timerNextName').textContent=nxtItem.name;
     document.getElementById('timerNextTime').textContent=nxtItem.time;
   } else {
-    document.getElementById('timerNextWrap').style.visibility='visible';
+    nxtWrap.style.visibility='visible';
     document.getElementById('timerNextPrefix').textContent='';
     document.getElementById('timerNextName').textContent='最終セグメント';
     document.getElementById('timerNextTime').textContent='';
@@ -1337,17 +1990,58 @@ function seqTick() {
     else        { playCdHigh(); }
   }
 
-  updateSeqDisplay(remain,secs);
+  // ★ 次セクション10秒前アナウンス
+  // 条件：残り10秒ちょうど・まだアナウンスしていない・次のセグメントがある・現セグメントが20秒超
+  if(secs===15 && lastNextAnnounced===-1 && remain>0) {
+    const segMs = parseTimeStr(seqItems[seqIdx].time);
+    const nextIdx2 = seqIdx+1;
+    if(segMs > 25000 && nextIdx2 < seqItems.length) {
+      lastNextAnnounced = 10;
+      const nxt = seqItems[nextIdx2];
+      speakQ('つぎは、' + (nxt.name||'') + '、' + readTimeStr(nxt.time), 1.1);
+    }
+  }
+
+  // ★ remain=0の時は表示更新をスキップしてDONE処理へ
+  // remain>0の時だけ表示を更新
+  if(remain>0) {
+    updateSeqDisplay(remain,secs);
+    const segName = seqItems[seqIdx]?.name || '';
+    const nextIdx = seqIdx+1;
+    const nextInfo= nextIdx<seqItems.length
+      ? (seqItems[nextIdx].name + ' ' + seqItems[nextIdx].time)
+      : '—';
+    let seqBoardStr;
+    if(secs <= 10) {
+      seqBoardStr = String(secs); // 10秒以下は秒数のみ（simpleTick と統一）
+    } else {
+      const sm=Math.floor(remain/60000), ss2=Math.ceil(remain/1000)%60;
+      seqBoardStr = String(sm).padStart(2,'0') + ':' + String(ss2).padStart(2,'0');
+    }
+    updateBoardTimer(seqBoardStr, segName, nextInfo);
+    // ★ タップゾーンのカウントダウン表示も更新
+    const td = document.getElementById('timerTapDisplay');
+    if(td) {
+      if(secs<=5) {
+        td.textContent=String(secs); td.className='timer-tap-display urgent countdown-num';
+      } else if(secs<=10) {
+        td.textContent=String(secs); td.className='timer-tap-display urgent';
+      } else {
+        td.textContent=seqBoardStr; td.className='timer-tap-display';
+      }
+    }
+  }
 
   if(remain<=0) {
     if(seqIdx<seqItems.length-1) {
-      seqIdx++; seqStartTime=Date.now(); lastCd=-1;
+      seqIdx++; seqStartTime=Date.now(); lastCd=-1; lastNextAnnounced=-1;
       const cur=seqItems[seqIdx];
-      playStart(); speakSegStart(cur.name,cur.time); renderSeqList();
+      playStart(); renderSeqList(); // ★ 切替時は音のみ（事前アナウンス済みのため読み上げなし）
     } else {
       seqRunning=false;
-      document.getElementById('timerDisplay').value='DONE';
-      document.getElementById('timerDisplay').className='timer-time-field urgent';
+      const _td3=document.getElementById('timerTapDisplay');
+      if(_td3){_td3.textContent='DONE';_td3.className='timer-tap-display urgent';}
+      updateBoardTimer('DONE','','');
       document.getElementById('timerNextWrap').style.visibility='hidden';
       playStop(); speakDone(); vibrate([100,50,100]);
       // reset
@@ -1362,6 +2056,9 @@ function timerReset() {
   seqRunning=false; seqDone=false; cancelAnimationFrame(seqRaf);
   seqIdx=0; lastCd=-1;
   timerDigits=[]; // ★ 入力時間もクリア
+  // ★ timerDisplayを明示的にクリア（SEQモード中でも確実に）
+  const _disp=document.getElementById('timerDisplay');
+  if(_disp){ _disp.value=''; _disp.className='normal-time-input dim'; }
   document.getElementById('timerHoldBar').style.width='0%';
   document.getElementById('timerNextWrap').style.visibility='visible';
   document.getElementById('timerSegCurrent').textContent='';
@@ -1369,6 +2066,20 @@ function timerReset() {
   releaseWakeLock();
   showTimerRunning(false); // updateTimerSetDisplay()を呼んで00:00 dimに戻す
   renderSeqList();
+  // リセット後はモード維持（タブ状態を再適用）
+  setTimerMode(seqModeActive ? 'seq' : 'normal');
+  // ★ ボードタイマー表示もリセット
+  document.getElementById('boardTimerTime').textContent = '--:--';
+  document.getElementById('boardSegName').textContent   = '';
+  document.getElementById('boardNextName').textContent  = '—';
+  document.getElementById('boardNextTime').textContent   = '';
+  const _bnl=document.getElementById('boardNextLabel'); if(_bnl) _bnl.textContent='';
+  // ディレイタイマーもキャンセル
+  if(boardDelayTimer) { clearInterval(boardDelayTimer); boardDelayTimer=null; }
+  const ind   = document.getElementById('boardDelayIndicator');
+  const label = document.getElementById('boardDelayLabel');
+  if(ind) ind.classList.remove('active');
+  if(label) label.textContent = boardDelaySeconds === 0 ? 'NORMAL' : 'DELAY ' + boardDelaySeconds + 's';
 }
 
 // タップゾーン：待機中はstart、実行中はhold=reset
@@ -1378,6 +2089,8 @@ function timerTapZoneDown(e) {
   if(e.target.id==='timerDisplay' && !seqRunning) return;
   if(e.target.closest && e.target.closest('.seq-mode-toggle')) return;
   e.preventDefault();
+  // 排他制御：LAP動作中はTIMER操作を拒否
+  if(lapRunning) { showConflictFlash(); return; }
   if(!seqRunning) {
     if(getInputMs()===0 && !seqModeActive) return; // シンプルモードで時間未設定なら無視
     timerStartStop();
@@ -1391,8 +2104,8 @@ function timerTapZoneDown(e) {
   const t0=Date.now();
   timerHoldTimer=setInterval(()=>{
     const el=Date.now()-t0;
-    bar.style.width=Math.min(100,(el/1000)*100)+'%';
-    if(el>=1000){ clearInterval(timerHoldTimer); timerHoldTimer=null; timerHolding=true; timerReset(); bar.style.width='0%'; }
+    bar.style.width=Math.min(100,(el/500)*100)+'%';
+    if(el>=500){ clearInterval(timerHoldTimer); timerHoldTimer=null; timerHolding=true; timerReset(); bar.style.width='0%'; }
   },16);
 }
 function timerTapZoneUp(e) {
@@ -1411,6 +2124,13 @@ function timerTapCancel() {
 // ★ iOS対策：タッチのたびにACをensure（passive=trueで遅延なし）
 document.body.addEventListener('touchstart', ensureAudio, { passive:true });
 
+// ===== MANUAL OVERLAY =====
+function openManual() {
+  const ov = document.getElementById('manualOverlay');
+  ov.style.display = 'block';
+  ov.scrollTop = 0;
+}
+
 // Init
 renderSeqList();
 applyDeltaMode();
@@ -1419,7 +2139,954 @@ requestWakeLock();
 // seqSectionは初期非表示
 const _seqSec=document.getElementById('seqSection');
 if(_seqSec) _seqSec.style.display='none';
+
+// ★ バーインジケーター制御（CSSクラス方式・シンプル）
+function setBoardIndicator(state) {
+  const bar   = document.getElementById('boardBar');
+  const timeEl= document.getElementById('boardLapTime');
+  if(bar) bar.className = 'board-bar ' + (state==='running'?'running': state==='holding'?'holding': state==='stopped'?'stopped': '');
+  if(timeEl) timeEl.className = 'board-time ' + (state==='running'?'running':'');
+}
+
+// ★ 確定ラップをボードに固定表示（doLap/doStopLapから呼ぶ）
+function showBoardLapResult() {
+  if(!laps.length) return;
+  const lapIdx  = laps.length - 1;
+  const lapMs   = laps[lapIdx].ms;
+  const totalMs = laps.reduce((a,l)=>a+l.ms, 0);
+  const minMs   = Math.min(...laps.map(l=>l.ms));
+  const ref     = getDeltaRef(lapIdx, minMs);
+  const deltaMs = (ref !== null) ? lapMs - ref : null;
+  showBoardLapResultDelayed({ lapNum: laps.length, lapMs, totalMs, deltaMs });
+}
+function selectDelay(btn) {
+  document.querySelectorAll('[data-delay]').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  boardDelaySeconds = parseInt(btn.dataset.delay);
+  updateDelayIndicator();
+}
+
+// インジケーター更新
+function updateDelayIndicator() {
+  const ind   = document.getElementById('boardDelayIndicator');
+  const label = document.getElementById('boardDelayLabel');
+  if(!ind || !label) return;
+  if(boardDelaySeconds === 0) {
+    ind.classList.remove('active');
+    label.textContent = 'NORMAL';
+  } else {
+    ind.classList.remove('active');
+    label.textContent = 'DELAY ' + boardDelaySeconds + 's';
+  }
+}
+
+// ディレイ付きラップ表示
+function showBoardLapResultDelayed(lapData) {
+  // 既存ディレイをキャンセル
+  if(boardDelayTimer) { clearInterval(boardDelayTimer); boardDelayTimer = null; }
+
+  if(boardDelaySeconds === 0) {
+    // NORMAL: 即時表示
+    applyBoardLapData(lapData);
+    return;
+  }
+
+  // DELAY: 今の表示をキープしてカウントダウン開始
+  let remain = boardDelaySeconds;
+  const ind   = document.getElementById('boardDelayIndicator');
+  const label = document.getElementById('boardDelayLabel');
+  if(ind) ind.classList.add('active');
+
+  const tick = () => {
+    if(label) label.textContent = 'DELAY ' + remain + 's';
+    if(remain <= 0) {
+      clearInterval(boardDelayTimer); boardDelayTimer = null;
+      if(ind) { ind.classList.remove('active'); label.textContent = 'DELAY ' + boardDelaySeconds + 's'; }
+      applyBoardLapData(lapData);
+    }
+    remain--;
+  };
+  tick(); // 即時1回
+  boardDelayTimer = setInterval(tick, 1000);
+}
+
+// 実際にDOMに反映する（旧showBoardLapResultの中身）
+function applyBoardLapData(d) {
+  document.getElementById('boardLapNum').textContent    = 'LAP ' + d.lapNum;
+  document.getElementById('boardLapTime').textContent   = formatMsTenth(d.lapMs);
+  document.getElementById('boardTotalTime').textContent = formatMs(d.totalMs);
+  const dw = document.getElementById('boardDelta');
+  if(dw) {
+    if(d.deltaMs !== null && DELTA_MODES[deltaIdx].key !== 'none') {
+      const sign = d.deltaMs >= 0 ? '+' : '-';
+      const abs  = (Math.abs(d.deltaMs)/1000).toFixed(2);
+      const cls  = d.deltaMs > 150 ? 'board-delta-minus' : d.deltaMs < -150 ? 'board-delta-plus' : 'board-delta-zero';
+      dw.innerHTML = '<div class="board-delta-text ' + cls + '">' + sign + abs + 's</div>';
+    } else { dw.innerHTML = ''; }
+  }
+  // ディレイ完了後：バー状態をリセット
+  if(lapRunning) setBoardIndicator('running');
+  else if(!lapRunning && d.lapNum > 0) setBoardIndicator('stopped');
+}
+
+// ===================== BOARD MODE =====================
+let boardHoldTimer    = null;
+let boardHolding      = false;
+let boardDelaySeconds = 5;     // デフォルト5秒
+let boardDelayTimer   = null;
+let boardCtrlHintTimer = null;
+
+// BOARDモード切替時にLAP/TIMERどちらを表示するか決める
+function updateBoardMode() {
+  const src = getBoardSourceMode(); // 常に動作中モードを自動判定
+  document.getElementById('boardLapPanel').style.display   = src==='lap'  ? 'flex' : 'none';
+  document.getElementById('boardTimerPanel').style.display = src==='timer' ? 'flex' : 'none';
+  document.querySelector('.board-hint').textContent =
+    src==='lap' ? 'TAP = LAP  |  HOLD 1s = STOP' : 'TAP = START/PAUSE  |  HOLD 1s = RESET';
+  // タブのアクティブ状態を同期
+  document.getElementById('boardTabLap').classList.toggle('active',   src==='lap');
+  document.getElementById('boardTabTimer').classList.toggle('active', src==='timer');
+}
+
+// ユーザーが手動でLAP/TIMERを選択
+// setBoardSource削除：タブはインジケーターのみ、常に自動判定
+
+// lapTickからボード表示を更新（lapTickの末尾から呼ぶ）
+function updateBoardLap(cur, total, deltaMs, hasDelta) {
+  if(!document.getElementById('boardScreen').classList.contains('active')) return;
+  document.getElementById('boardLapNum').textContent  = `LAP ${laps.length}`;
+  document.getElementById('boardLapTime').textContent = formatMsTenth(cur);
+  document.getElementById('boardTotalTime').textContent = formatMsTenth(total);
+  // 差分
+  const dw = document.getElementById('boardDelta');
+  if(hasDelta && DELTA_MODES[deltaIdx].key!=='none') {
+    const sign = deltaMs>=0 ? '+' : '-';
+    const abs  = (Math.abs(deltaMs)/1000).toFixed(2);
+    const cls  = deltaMs>150 ? 'board-delta-minus' : deltaMs<-150 ? 'board-delta-plus' : 'board-delta-zero';
+    dw.innerHTML = `<div class="board-delta-text ${cls}">${sign}${abs}s</div>`;
+  } else {
+    dw.innerHTML = '';
+  }
+}
+
+// simpleTick/seqTickからボードタイマー表示を更新
+function updateBoardTimer(timeStr, segName, nextInfo) {
+  // boardTimerBar の状態を実行中に合わせる
+  const bbar=document.getElementById('boardTimerBar');
+  if(bbar && timeStr!='--:--') {
+    if(timeStr==='DONE') bbar.className='board-bar stopped';
+    else bbar.className='board-bar running';
+  }
+  // NEXT情報を名前と時間に分割（最後のスペース区切り）
+  const _nextName=document.getElementById('boardNextName');
+  const _nextTime=document.getElementById('boardNextTime');
+  const _nextLabel=document.getElementById('boardNextLabel');
+  if(_nextName && _nextTime) {
+    if(!nextInfo || nextInfo==='—') {
+      if(_nextLabel) _nextLabel.textContent='';
+      _nextName.textContent='—'; _nextTime.textContent='';
+    } else {
+      if(_nextLabel) _nextLabel.textContent='NEXT';
+      // "名前 MM:SS" 形式を分割
+      const lastSp=nextInfo.lastIndexOf(' ');
+      if(lastSp>0){ _nextName.textContent=nextInfo.slice(0,lastSp); _nextTime.textContent=nextInfo.slice(lastSp+1); }
+      else { _nextName.textContent=nextInfo; _nextTime.textContent=''; }
+    }
+  }
+  if(!document.getElementById('boardScreen').classList.contains('active')) return;
+  const el = document.getElementById('boardTimerTime');
+  el.textContent = timeStr;
+  // 数字のみ（5以下）なら urgent（赤）、それ以外は通常色
+  const isUrgent = /^[1-5]$/.test(timeStr.trim());
+  el.classList.toggle('urgent', isUrgent);
+  document.getElementById('boardSegName').textContent   = segName  || '';
+}
+
+// BOARDタップゾーンのイベント
+function boardTapStart(e) {
+  e.preventDefault();
+  const src = getBoardSourceMode();
+  if(src==="timer" && !seqRunning && getInputMs()===0) {
+    showTimerSetHint(); return;
+  }
+  if(src==="lap") {
+    // LAPモードと同じ動作
+    if(!lapRunning){ startLap(); return; }
+    playTap(); vibrate(30);
+    boardHolding=false;
+    const bar=document.getElementById('boardHoldBar');
+    bar.style.width='0%';
+    const t0=Date.now();
+    holdFreezeMs=Date.now(); setBoardIndicator('holding');
+    boardHoldTimer=setInterval(()=>{
+      const el=Date.now()-t0;
+      bar.style.width=Math.min(100,(el/500)*100)+'%';
+      if(el>=500){ clearInterval(boardHoldTimer); boardHoldTimer=null; boardHolding=true; holdFreezeMs=null; doStopLap(); bar.style.width='0%'; }
+    },16);
+  } else {
+    // TIMERモード：boardHoldBarを使った独自hold制御
+    if(!seqRunning) {
+      // 未実行時はそのままstart
+      timerStartStop(); return;
+    }
+    // 実行中：ホールドでリセット
+    playTap(); vibrate(30);
+    boardHolding=false;
+    const barT=document.getElementById('boardHoldBar');
+    const barTop=document.getElementById('boardTimerBar');
+    if(barT) barT.style.width='0%';
+    if(barTop) barTop.className='board-bar holding';
+    const t0t=Date.now();
+    boardHoldTimer=setInterval(()=>{
+      const el=Date.now()-t0t;
+      if(barT) barT.style.width=Math.min(100,(el/500)*100)+'%';
+      if(el>=500){
+        clearInterval(boardHoldTimer); boardHoldTimer=null; boardHolding=true;
+        if(barT) barT.style.width='0%';
+        if(barTop) barTop.className='board-bar stopped';
+        timerReset();
+      }
+    },16);
+  }
+}
+function boardTapEnd(e) {
+  e.preventDefault();
+  const src = getBoardSourceMode();
+  if(src==='lap') {
+    if(boardHoldTimer){
+      clearInterval(boardHoldTimer); boardHoldTimer=null;
+      document.getElementById('boardHoldBar').style.width='0%';
+      if(!boardHolding&&lapRunning) doLap();
+    }
+    boardHolding=false;
+    holdFreezeMs=null;
+    if(lapRunning) setBoardIndicator('running');
+  } else {
+    // TIMERモード：ホールド未完でリリース→タップ扱い（start/stop）
+    if(boardHoldTimer){
+      clearInterval(boardHoldTimer); boardHoldTimer=null;
+      const barT=document.getElementById('boardHoldBar');
+      const barTop=document.getElementById('boardTimerBar');
+      if(barT) barT.style.width='0%';
+      if(barTop) barTop.className='board-bar'+(seqRunning?' running':'');
+      if(!boardHolding) timerStartStop();
+    }
+    boardHolding=false;
+  }
+}
+function boardTapCancel() {
+  if(boardHoldTimer){ clearInterval(boardHoldTimer); boardHoldTimer=null; document.getElementById('boardHoldBar').style.width='0%'; }
+  const barTop=document.getElementById('boardTimerBar');
+  if(barTop) barTop.className='board-bar'+(seqRunning?' running':'');
+}
 </script>
+
+<div id="manualOverlay" style="display:none;">
+<style>
+#manualOverlay {
+  position:fixed; inset:0; z-index:9000;
+  background:#0a0a0a;
+  overflow-y:auto; overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  font-family:'Noto Sans JP',sans-serif;
+}
+#manualOverlay * { box-sizing:border-box; margin:0; padding:0; }
+.mn-nav {
+  position:sticky; top:0; z-index:100;
+  background:rgba(10,10,10,0.97);
+  border-bottom:1px solid #222;
+  backdrop-filter:blur(10px);
+  display:flex; align-items:center;
+  padding:0 12px; gap:0;
+  overflow-x:auto; scrollbar-width:none;
+}
+.mn-nav::-webkit-scrollbar { display:none; }
+.mn-nav-close {
+  font-family:'Roboto',sans-serif; font-weight:900;
+  font-size:18px; color:#555; cursor:pointer;
+  padding:12px 16px 12px 4px; flex-shrink:0;
+  border:none; background:none;
+  transition:color 0.2s;
+}
+.mn-nav-close:hover { color:#e8ff00; }
+.mn-nav a {
+  font-family:'Roboto',sans-serif;
+  font-weight:700; font-size:9px;
+  letter-spacing:2px; text-transform:uppercase;
+  color:#444; text-decoration:none;
+  padding:14px 10px; white-space:nowrap;
+  border-bottom:2px solid transparent;
+  transition:all 0.2s; flex-shrink:0;
+}
+.mn-nav a:hover { color:#fff; }
+.mn-nav a.mn-active { color:#e8ff00; border-color:#e8ff00; }
+
+.mn-hero {
+  padding:48px 24px 40px;
+  border-bottom:1px solid #222;
+}
+.mn-eyebrow {
+  font-family:'Roboto Mono',monospace;
+  font-size:10px; font-weight:600;
+  letter-spacing:4px; color:#e8ff00;
+  margin-bottom:10px;
+}
+.mn-logo {
+  font-family:'Roboto',sans-serif;
+  font-weight:900; font-size:48px;
+  letter-spacing:6px; color:#e8ff00;
+  line-height:1; margin-bottom:4px;
+}
+.mn-sub {
+  font-family:'Roboto',sans-serif;
+  font-weight:300; font-size:12px;
+  letter-spacing:4px; color:#888;
+  text-transform:uppercase; margin-bottom:20px;
+}
+.mn-desc { font-size:13px; color:#aaa; max-width:340px; line-height:1.8; }
+.mn-badge {
+  display:inline-block; margin-top:16px;
+  font-family:'Roboto Mono',monospace;
+  font-size:9px; font-weight:700; letter-spacing:2px;
+  padding:3px 10px; border:1px solid #333; color:#444;
+}
+
+.mn-section {
+  padding:40px 24px;
+  border-bottom:1px solid #1a1a1a;
+}
+.mn-section-header {
+  display:flex; align-items:baseline; gap:10px;
+  margin-bottom:24px;
+}
+.mn-num {
+  font-family:'Roboto Mono',monospace;
+  font-size:10px; font-weight:700;
+  letter-spacing:2px; color:#e8ff00;
+}
+.mn-title {
+  font-family:'Roboto',sans-serif;
+  font-weight:900; font-size:20px;
+  letter-spacing:3px; text-transform:uppercase;
+  color:#fff;
+}
+.mn-lead {
+  font-size:13px; color:#bbb;
+  margin-bottom:24px; line-height:1.9;
+}
+
+.mn-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:8px; margin-bottom:20px;
+}
+.mn-card {
+  background:#111; border:1px solid #1e1e1e;
+  border-radius:3px; padding:12px;
+}
+.mn-card-icon { font-size:18px; margin-bottom:6px; }
+.mn-card-title {
+  font-family:'Roboto',sans-serif;
+  font-weight:700; font-size:10px;
+  letter-spacing:2px; color:#e8ff00;
+  margin-bottom:4px;
+}
+.mn-card-body { font-size:11px; color:#888; line-height:1.7; }
+
+.mn-steps { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+.mn-step {
+  display:flex; gap:12px; align-items:flex-start;
+  padding:12px; background:#111;
+  border:1px solid #1e1e1e; border-radius:3px;
+}
+.mn-step-num {
+  font-family:'Roboto Mono',monospace;
+  font-weight:700; font-size:15px;
+  color:#e8ff00; min-width:22px; line-height:1;
+}
+.mn-step-title {
+  font-family:'Roboto',sans-serif;
+  font-weight:700; font-size:12px;
+  letter-spacing:1px; margin-bottom:3px; color:#fff;
+}
+.mn-step-desc { font-size:12px; color:#888; line-height:1.7; }
+.mn-tip {
+  display:inline-block; margin-top:5px;
+  font-family:'Roboto',sans-serif; font-weight:700;
+  font-size:9px; letter-spacing:1px;
+  padding:2px 8px;
+  background:rgba(232,255,0,0.08);
+  border:1px solid rgba(232,255,0,0.25); color:#e8ff00;
+  border-radius:2px;
+}
+
+.mn-divider {
+  display:flex; align-items:center; gap:10px;
+  margin:20px 0;
+}
+.mn-divider-line { flex:1; height:1px; background:#1e1e1e; }
+.mn-divider-text {
+  font-family:'Roboto Mono',monospace;
+  font-size:9px; font-weight:700; letter-spacing:2px; color:#333;
+}
+
+.mn-note {
+  background:rgba(232,255,0,0.04);
+  border:1px solid rgba(232,255,0,0.15);
+  border-radius:3px; padding:12px 14px;
+  font-size:11px; color:#bbb; line-height:1.8;
+  margin-bottom:14px;
+}
+.mn-note strong {
+  font-family:'Roboto',sans-serif;
+  font-weight:700; color:#e8ff00;
+}
+.mn-warn {
+  background:rgba(255,48,48,0.05);
+  border:1px solid rgba(255,48,48,0.2);
+  border-radius:3px; padding:12px 14px;
+  font-size:11px; color:#bbb; line-height:1.8;
+  margin-bottom:14px;
+}
+.mn-warn strong { color:#ff4444; }
+
+.mn-table {
+  width:100%; border-collapse:collapse;
+  margin-bottom:16px; font-size:11px;
+}
+.mn-table th {
+  font-family:'Roboto',sans-serif;
+  font-weight:700; font-size:9px;
+  letter-spacing:2px; color:#555;
+  text-align:left; padding:7px 8px;
+  border-bottom:1px solid #1e1e1e;
+}
+.mn-table td {
+  padding:9px 8px; border-bottom:1px solid #111;
+  color:#bbb; vertical-align:middle;
+}
+.mn-table tr:last-child td { border-bottom:none; }
+.mn-pill {
+  display:inline-block;
+  font-family:'Roboto Mono',monospace;
+  font-weight:700; font-size:9px; letter-spacing:1px;
+  padding:2px 7px; border-radius:2px;
+}
+.mn-pill-hi { background:rgba(232,255,0,0.1); color:#e8ff00; border:1px solid rgba(232,255,0,0.3); }
+.mn-pill-lo { background:rgba(255,48,48,0.1); color:#ff3030; border:1px solid rgba(255,48,48,0.3); }
+
+.mn-delta-list { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
+.mn-delta-item {
+  display:flex; gap:10px; align-items:flex-start;
+  padding:10px; background:#111;
+  border:1px solid #1e1e1e; border-radius:3px;
+}
+.mn-delta-icon {
+  font-family:'Roboto',sans-serif; font-weight:900;
+  font-size:8px; letter-spacing:2px;
+  padding:3px 6px; color:#000; background:#e8ff00;
+  flex-shrink:0; margin-top:1px; white-space:nowrap;
+}
+.mn-delta-name { font-weight:700; font-size:12px; margin-bottom:2px; color:#fff; }
+.mn-delta-desc { font-size:11px; color:#777; }
+
+.mn-footer {
+  padding:32px 24px; text-align:center;
+  border-top:1px solid #1e1e1e;
+}
+.mn-footer-logo {
+  font-family:'Roboto',sans-serif;
+  font-weight:900; font-size:24px;
+  letter-spacing:6px; color:#e8ff00;
+  margin-bottom:6px;
+}
+.mn-footer-sub { font-size:10px; color:#333; letter-spacing:3px; }
+</style>
+
+<!-- NAV -->
+<nav class="mn-nav" id="mnNav">
+  <button class="mn-nav-close" onclick="closeManual()">✕</button>
+  <a href="#mn-overview" class="mn-active">概要</a>
+  <a href="#mn-lap">LAP</a>
+  <a href="#mn-timer">TIMER</a>
+  <a href="#mn-board">BOARD</a>
+  <a href="#mn-sound">音声</a>
+  <a href="#mn-pocket">ポケット</a>
+  <a href="#mn-settings">設定</a>
+  <a href="#mn-faq">FAQ</a>
+</nav>
+
+<!-- HERO -->
+<header class="mn-hero" id="mn-overview">
+  <div class="mn-eyebrow">OFFICIAL MANUAL — v9</div>
+  <div class="mn-logo">BTLT</div>
+  <div class="mn-sub">BLIND TAP LAP TIMER</div>
+  <div class="mn-desc">
+    画面を見ずに操作できる、モータースポーツ向けラップタイマー＆カウントダウンタイマー。音とバイブレーションで結果を伝え、ブラインド操作に特化した設計。
+  </div>
+  <div class="mn-badge">VERSION 9 · iOS / Android / PC 対応</div>
+</header>
+
+<!-- 01 概要 -->
+<section class="mn-section">
+  <div class="mn-section-header">
+    <span class="mn-num">01</span>
+    <h2 class="mn-title">概要</h2>
+  </div>
+  <p class="mn-lead">BTLTは3つのモードを持つ。上部のタブで切り替える。</p>
+  <div class="mn-grid">
+    <div class="mn-card">
+      <div class="mn-card-icon">🏁</div>
+      <div class="mn-card-title">LAPモード</div>
+      <div class="mn-card-body">ストップウォッチ式ラップタイマー。タップでラップ記録、0.5秒ホールドで停止。差分を音声読み上げ。</div>
+    </div>
+    <div class="mn-card">
+      <div class="mn-card-icon">⏱</div>
+      <div class="mn-card-title">TIMERモード</div>
+      <div class="mn-card-body">カウントダウンタイマー。シンプルな1タイマーと、複数セグメントを連続実行するSEQモードを搭載。</div>
+    </div>
+    <div class="mn-card">
+      <div class="mn-card-icon">📋</div>
+      <div class="mn-card-title">BOARDモード</div>
+      <div class="mn-card-body">LAPまたはTIMERのデータを全画面大型表示。離れた場所からでも視認できる大きな数字で表示。</div>
+    </div>
+    <div class="mn-card">
+      <div class="mn-card-icon">🔒</div>
+      <div class="mn-card-title">ポケットモード</div>
+      <div class="mn-card-body">スマホをポケットに入れたときの誤操作を防止。ダブルタップで解除。</div>
+    </div>
+  </div>
+  <div class="mn-note">
+    <strong>ブラインド操作の原則</strong><br>
+    大きなボタンエリアをタップするだけで操作が完結。ラップ記録も停止も、画面を一切見ずに指の感触だけで行える設計。
+  </div>
+</section>
+
+<!-- 02 LAPモード -->
+<section class="mn-section" id="mn-lap">
+  <div class="mn-section-header">
+    <span class="mn-num">02</span>
+    <h2 class="mn-title">LAPモード</h2>
+  </div>
+  <p class="mn-lead">ラップタイマーの全機能。</p>
+
+  <div class="mn-divider"><div class="mn-divider-line"></div><div class="mn-divider-text">OPERATION</div><div class="mn-divider-line"></div></div>
+  <div class="mn-steps">
+    <div class="mn-step">
+      <div class="mn-step-num">1</div>
+      <div>
+        <div class="mn-step-title">スタート</div>
+        <div class="mn-step-desc">大タップエリアをタップ。高くて長いビープ音「ピーーー」が鳴ればスタート完了。</div>
+      </div>
+    </div>
+    <div class="mn-step">
+      <div class="mn-step-num">2</div>
+      <div>
+        <div class="mn-step-title">ラップ記録</div>
+        <div class="mn-step-desc">走行中にタップするたびにラップを記録。短い高音「ピッ」で確認。差分が音声で読み上げられる。</div>
+        <span class="mn-tip">「おそい、2秒3」「はやい、0秒8」「同じ」</span>
+      </div>
+    </div>
+    <div class="mn-step">
+      <div class="mn-step-num">3</div>
+      <div>
+        <div class="mn-step-title">停止</div>
+        <div class="mn-step-desc">大タップエリアを0.5秒間長押し。ホールドバーが満タンになったところで離す。低音「ポーーー」で停止確認。</div>
+        <span class="mn-tip">0.5秒ホールド（以前の1秒から短縮）</span>
+      </div>
+    </div>
+    <div class="mn-step">
+      <div class="mn-step-num">4</div>
+      <div>
+        <div class="mn-step-title">リセット</div>
+        <div class="mn-step-desc">下部の「RESET」ボタンで全データをクリア。ラップリストが消えてゼロに戻る。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mn-divider"><div class="mn-divider-line"></div><div class="mn-divider-text">目標タイム設定</div><div class="mn-divider-line"></div></div>
+  <div class="mn-note">
+    <strong>目標タイム入力</strong><br>
+    上部バー内の時間表示をタップするとキーボードが表示される。タップ時に自動全選択されるのでそのまま入力可能。数字キーボードが出るので直接入力する。<br>
+    デフォルトは「0:00.000」。
+  </div>
+
+  <div class="mn-divider"><div class="mn-divider-line"></div><div class="mn-divider-text">DELTA MODES</div><div class="mn-divider-line"></div></div>
+  <p class="mn-lead" style="margin-bottom:12px;">差分バー（情報エリア上部）を左右スワイプで4種のモードを切り替えられる。</p>
+  <div class="mn-delta-list">
+    <div class="mn-delta-item">
+      <div class="mn-delta-icon">TARGET</div>
+      <div>
+        <div class="mn-delta-name">目標タイム差</div>
+        <div class="mn-delta-desc">設定した目標タイムとの差分を表示・読み上げ。</div>
+      </div>
+    </div>
+    <div class="mn-delta-item">
+      <div class="mn-delta-icon">PREV</div>
+      <div>
+        <div class="mn-delta-name">前ラップ差</div>
+        <div class="mn-delta-desc">1つ前のラップとの差分。ペースの変化をリアルタイムに把握。</div>
+      </div>
+    </div>
+    <div class="mn-delta-item">
+      <div class="mn-delta-icon">BEST</div>
+      <div>
+        <div class="mn-delta-name">ベスト差</div>
+        <div class="mn-delta-desc">セッション中のベストラップとの差分。</div>
+      </div>
+    </div>
+    <div class="mn-delta-item">
+      <div class="mn-delta-icon">NONE</div>
+      <div>
+        <div class="mn-delta-name">タイムのみ</div>
+        <div class="mn-delta-desc">差分なし。ラップタイムの数値だけをシンプルに記録。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 TIMERモード -->
+<section class="mn-section" id="mn-timer">
+  <div class="mn-section-header">
+    <span class="mn-num">03</span>
+    <h2 class="mn-title">TIMERモード</h2>
+  </div>
+  <p class="mn-lead">「通常」と「⚡SEQ」の2つのタブで切り替える。</p>
+
+  <div class="mn-divider"><div class="mn-divider-line"></div><div class="mn-divider-text">通常タイマー</div><div class="mn-divider-line"></div></div>
+  <div class="mn-steps">
+    <div class="mn-step">
+      <div class="mn-step-num">1</div>
+      <div>
+        <div class="mn-step-title">時間を設定する</div>
+        <div class="mn-step-desc">入力エリアの時間表示をタップしてキーボードで直接入力。プリセットボタン（1分／3分／5分／10分）も利用可能。</div>
+        <span class="mn-tip">「130」と打てば「01:30」になる</span>
+      </div>
+    </div>
+    <div class="mn-step">
+      <div class="mn-step-num">2</div>
+      <div>
+        <div class="mn-step-title">スタート／一時停止</div>
+        <div class="mn-step-desc">大タップエリアをタップ。カウントダウンが始まる。タップで一時停止／再開。</div>
+      </div>
+    </div>
+    <div class="mn-step">
+      <div class="mn-step-num">3</div>
+      <div>
+        <div class="mn-step-title">リセット</div>
+        <div class="mn-step-desc">大タップゾーンを0.5秒ホールドでリセット。または下部「RESET」ボタン。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mn-divider"><div class="mn-divider-line"></div><div class="mn-divider-text">SEQタイマー（シーケンシャル）</div><div class="mn-divider-line"></div></div>
+  <div class="mn-steps">
+    <div class="mn-step">
+      <div class="mn-step-num">1</div>
+      <div>
+        <div class="mn-step-title">⚡SEQタブをタップ</div>
+        <div class="mn-step-desc">上部タブで「⚡ SEQ」を選択するとセグメントリストが表示される。</div>
+      </div>
+    </div>
+    <div class="mn-step">
+      <div class="mn-step-num">2</div>
+      <div>
+        <div class="mn-step-title">セグメントを編集する</div>
+        <div class="mn-step-desc">各行の名前欄（薄い「セグメント1」等のヒント表示）と時間欄をタップして編集。「＋ セグメント追加」で項目を増やし、「✕」で削除。名前は空のまま実行も可能。</div>
+        <span class="mn-tip">例：ウォームアップ 3:00 → メインセット 5:00 → クールダウン 2:00</span>
+      </div>
+    </div>
+    <div class="mn-step">
+      <div class="mn-step-num">3</div>
+      <div>
+        <div class="mn-step-title">スタート</div>
+        <div class="mn-step-desc">大タップエリアをタップ。セグメントが順番に自動で切り替わる。動作中は「現在セグメント名」→「カウントダウン数字」→「NEXT 次セグメント名 時間」が表示される。</div>
+      </div>
+    </div>
+    <div class="mn-step">
+      <div class="mn-step-num">4</div>
+      <div>
+        <div class="mn-step-title">次セグメント事前告知（音声）</div>
+        <div class="mn-step-desc">25秒超のセグメントでは、残り15秒で「つぎは、〇〇、〇ふん」と読み上げる。残り5秒からカウントダウン音声が始まる。</div>
+        <span class="mn-tip">音声はPC/Androidで動作。iOS Safariはビープ音のみ。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="mn-note">
+    <strong>横向き（ランドスケープ）表示</strong><br>
+    横向きにすると自動的に「情報エリア（セグメントリスト）」と「大タップエリア」の2カラム表示になる。複数セグメントが一覧表示できる。
+  </div>
+</section>
+
+<!-- 04 BOARDモード -->
+<section class="mn-section" id="mn-board">
+  <div class="mn-section-header">
+    <span class="mn-num">04</span>
+    <h2 class="mn-title">BOARDモード</h2>
+  </div>
+  <p class="mn-lead">LAPまたはTIMERのデータを全画面大型表示。離れた場所からでも視認できる。</p>
+
+  <div class="mn-steps">
+    <div class="mn-step">
+      <div class="mn-step-num">1</div>
+      <div>
+        <div class="mn-step-title">BOARDモードに切り替える</div>
+        <div class="mn-step-desc">上部タブの「BOARD」をタップ。または計測中にBOARDタブをタップすればそのまま大画面表示に切り替わる。</div>
+      </div>
+    </div>
+    <div class="mn-step">
+      <div class="mn-step-num">2</div>
+      <div>
+        <div class="mn-step-title">LAP / TIMER を選択</div>
+        <div class="mn-step-desc">コントロールバー（画面下部固定）のタブ「LAP」「TIMER」でどちらのデータを表示するか切り替え。横向きで使うと数字がさらに大きく表示される。</div>
+      </div>
+    </div>
+    <div class="mn-step">
+      <div class="mn-step-num">3</div>
+      <div>
+        <div class="mn-step-title">操作（LAPモード時）</div>
+        <div class="mn-step-desc">画面全体をタップでラップ記録、0.5秒ホールドで停止。上部インジケーターバーが緑点滅（計測中）→黄色点滅（ホールド中）と変化する。</div>
+      </div>
+    </div>
+    <div class="mn-step">
+      <div class="mn-step-num">4</div>
+      <div>
+        <div class="mn-step-title">TIMERボード表示</div>
+        <div class="mn-step-desc">SEQタイマー実行中は「現在セグメント名」「カウントダウン数字（大）」「NEXT 次セグメント名 時間」を大画面表示。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mn-note">
+    <strong>インジケーターバー（上部）</strong><br>
+    緑パルス = 計測中 ／ 黄色点滅 = ホールド中（停止直前）／ 消灯 = 停止済み
+  </div>
+</section>
+
+<!-- 05 音声フィードバック -->
+<section class="mn-section" id="mn-sound">
+  <div class="mn-section-header">
+    <span class="mn-num">05</span>
+    <h2 class="mn-title">音声フィードバック</h2>
+  </div>
+  <p class="mn-lead">ブラインド操作の核心。音だけで何が起きたかわかる設計。</p>
+
+  <table class="mn-table">
+    <thead>
+      <tr><th>操作／タイミング</th><th>音</th><th>特徴</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>スタート</td><td><span class="mn-pill mn-pill-hi">1300Hz / 0.55秒</span></td><td>高くて長い「ピーーー」</td></tr>
+      <tr><td>ラップ記録</td><td><span class="mn-pill mn-pill-hi">1500Hz / 0.10秒</span></td><td>高くて短い「ピッ」</td></tr>
+      <tr><td>停止 / 終了</td><td><span class="mn-pill mn-pill-lo">400Hz / 0.70秒</span></td><td>低くて長い「ポーーー」</td></tr>
+      <tr><td>カウントダウン 10〜6秒</td><td><span class="mn-pill mn-pill-hi">1100Hz / 短</span></td><td>高音ビープ（1秒ごと）</td></tr>
+      <tr><td>カウントダウン 5〜1秒</td><td><span class="mn-pill mn-pill-lo">660Hz / 短</span></td><td>低音ビープ＋数字読み上げ</td></tr>
+      <tr><td>SEQ残り15秒（次セグ告知）</td><td>—</td><td>「つぎは、〇〇、〇ふん」（25秒超のセグのみ）</td></tr>
+      <tr><td>SEQセグメント切替</td><td><span class="mn-pill mn-pill-hi">スタート音</span></td><td>読み上げなし・音のみ</td></tr>
+    </tbody>
+  </table>
+
+  <div class="mn-note">
+    <strong>LAPモード読み上げ例</strong><br>
+    「おそい、2秒3」— 目標より2.3秒遅い<br>
+    「はやい、1秒0」— 目標より1.0秒速い<br>
+    「同じ」— 差分が0.15秒未満
+  </div>
+
+  <div class="mn-warn">
+    <strong>⚠️ iOS Safariの制限</strong><br>
+    iOS Safariでは音声読み上げ（speechSynthesis）がタイマーコールバックから動作しない制限があります。ビープ音は正常に鳴ります。読み上げ機能はPC（Chrome推奨）またはAndroidで動作します。
+  </div>
+
+  <div class="mn-divider"><div class="mn-divider-line"></div><div class="mn-divider-text">SOUND SETTINGS</div><div class="mn-divider-line"></div></div>
+  <div class="mn-grid">
+    <div class="mn-card">
+      <div class="mn-card-title">BEEP</div>
+      <div class="mn-card-body">標準。合成音のビープ音と音声読み上げ。</div>
+    </div>
+    <div class="mn-card">
+      <div class="mn-card-title">🐶 WANKO</div>
+      <div class="mn-card-body">犬の鳴き声モード。「ワン」「ワンワン」「ワォーン」</div>
+    </div>
+    <div class="mn-card">
+      <div class="mn-card-title">🐱 NYANKO</div>
+      <div class="mn-card-body">猫の鳴き声モード。「にゃん」「にゃにゃ」「にゃーん」</div>
+    </div>
+    <div class="mn-card">
+      <div class="mn-card-title">MUTE</div>
+      <div class="mn-card-body">消音モード。バイブレーションのみ（Android）</div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 ポケットモード -->
+<section class="mn-section" id="mn-pocket">
+  <div class="mn-section-header">
+    <span class="mn-num">06</span>
+    <h2 class="mn-title">ポケットモード</h2>
+  </div>
+  <p class="mn-lead">スマホをポケットやパッドに収納したときの誤操作を防ぐ。時計表示だけは常に見える。</p>
+  <div class="mn-steps">
+    <div class="mn-step">
+      <div class="mn-step-num">1</div>
+      <div>
+        <div class="mn-step-title">ロックする</div>
+        <div class="mn-step-desc">ヘッダーの🔒ボタンをタップ。画面全体が暗くなり、現在時刻だけが表示される。</div>
+      </div>
+    </div>
+    <div class="mn-step">
+      <div class="mn-step-num">2</div>
+      <div>
+        <div class="mn-step-title">解除する</div>
+        <div class="mn-step-desc">ロック画面をすばやく2回連続でタップ（ダブルタップ）。0.5秒以内に2回叩けば解除される。</div>
+        <span class="mn-tip">スマホを取り出してすぐ操作できる</span>
+      </div>
+    </div>
+  </div>
+  <div class="mn-note">
+    <strong>注意</strong><br>
+    ロック中も計測・カウントダウンは継続している。ロックはあくまで誤タップ防止のためのもの。
+  </div>
+</section>
+
+<!-- 07 設定 -->
+<section class="mn-section" id="mn-settings">
+  <div class="mn-section-header">
+    <span class="mn-num">07</span>
+    <h2 class="mn-title">設定</h2>
+  </div>
+  <p class="mn-lead">ヘッダー右端の⚙️ボタンから設定画面を開く。</p>
+  <div class="mn-delta-list">
+    <div class="mn-delta-item">
+      <div class="mn-delta-icon" style="font-size:7px;padding:4px 5px;">SOUND<br>MODE</div>
+      <div>
+        <div class="mn-delta-name">サウンドモード</div>
+        <div class="mn-delta-desc">BEEP / WANKO / NYANKO / MUTE から選択。</div>
+      </div>
+    </div>
+    <div class="mn-delta-item">
+      <div class="mn-delta-icon" style="font-size:7px;padding:4px 5px;">VOICE<br>FEED</div>
+      <div>
+        <div class="mn-delta-name">音声フィードバック</div>
+        <div class="mn-delta-desc">ON/OFFで音声読み上げを切り替え。ヘッダーの🔊/🔇ボタンでも即切替可能。</div>
+      </div>
+    </div>
+    <div class="mn-delta-item">
+      <div class="mn-delta-icon" style="font-size:7px;padding:4px 5px;">HOT<br>LAP</div>
+      <div>
+        <div class="mn-delta-name">ベストラップの色</div>
+        <div class="mn-delta-desc">RED / ORANGE / PINK から選択。</div>
+      </div>
+    </div>
+    <div class="mn-delta-item">
+      <div class="mn-delta-icon" style="font-size:7px;padding:4px 5px;">WORST<br>LAP</div>
+      <div>
+        <div class="mn-delta-name">ワーストラップの色</div>
+        <div class="mn-delta-desc">BLUE / GRAY / PURPLE から選択。</div>
+      </div>
+    </div>
+    <div class="mn-delta-item">
+      <div class="mn-delta-icon" style="font-size:7px;padding:4px 5px;">DELAY</div>
+      <div>
+        <div class="mn-delta-name">BOARDモード遅延</div>
+        <div class="mn-delta-desc">BOARDモードで実際の計測より指定秒数遅らせて表示（0 / 5 / 10 / 15 / 20秒）。</div>
+      </div>
+    </div>
+  </div>
+  <div class="mn-note">
+    <strong>WakeLock（画面スリープ防止）</strong><br>
+    計測中・カウントダウン中は自動的に画面スリープを防止する。計測停止またはリセット時に解除される。
+  </div>
+</section>
+
+<!-- 08 FAQ -->
+<section class="mn-section" id="mn-faq">
+  <div class="mn-section-header">
+    <span class="mn-num">08</span>
+    <h2 class="mn-title">よくある質問</h2>
+  </div>
+  <div class="mn-steps">
+    <div class="mn-step">
+      <div class="mn-step-num">Q</div>
+      <div>
+        <div class="mn-step-title">音（ビープ）が出ない</div>
+        <div class="mn-step-desc">iOSはページ読み込み直後は音が出ない仕様。最初に画面を1回タップすることで音声が有効になる。またiPhoneの側面サイレントスイッチ（オレンジ色が見えていないか）を確認。🔊ボタンでONになっているかも確認。</div>
+      </div>
+    </div>
+    <div class="mn-step">
+      <div class="mn-step-num">Q</div>
+      <div>
+        <div class="mn-step-title">音声読み上げが聞こえない（iOS）</div>
+        <div class="mn-step-desc">iOS Safariの仕様制限により、タイマーコールバックからの音声読み上げは動作しません。ビープ音は正常に鳴ります。読み上げが必要な場合はPC（Chrome推奨）またはAndroidをお使いください。</div>
+      </div>
+    </div>
+    <div class="mn-step">
+      <div class="mn-step-num">Q</div>
+      <div>
+        <div class="mn-step-title">SEQタイマーがスタートできない</div>
+        <div class="mn-step-desc">⚡SEQタブが選択されているか確認。またセグメントの時間が「00:00」のままだと警告が表示されます。時間欄をタップして時間を入力してから再試行。</div>
+      </div>
+    </div>
+    <div class="mn-step">
+      <div class="mn-step-num">Q</div>
+      <div>
+        <div class="mn-step-title">ポケットモードが解除できない</div>
+        <div class="mn-step-desc">ダブルタップは0.5秒以内に2回。ゆっくりすぎると認識されない。素早くトントンと叩く。</div>
+      </div>
+    </div>
+    <div class="mn-step">
+      <div class="mn-step-num">Q</div>
+      <div>
+        <div class="mn-step-title">ホーム画面に追加したい</div>
+        <div class="mn-step-desc">iOSのSafariで開いた状態で、共有ボタン →「ホーム画面に追加」でアプリのように使える。フルスクリーンで起動するようになる。</div>
+      </div>
+    </div>
+    <div class="mn-step">
+      <div class="mn-step-num">Q</div>
+      <div>
+        <div class="mn-step-title">停止するのに時間がかかる（感覚）</div>
+        <div class="mn-step-desc">ホールド時間は0.5秒。ホールドバーが満タンになるまで押し続ける。素早くタップすると通常操作（ラップ記録など）になる。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="mn-footer">
+  <div class="mn-footer-logo">BTLT</div>
+  <div class="mn-footer-sub">BLIND TAP LAP TIMER — v9</div>
+  <div style="margin-top:16px; font-size:10px; color:#222; letter-spacing:1px; line-height:2;">
+    設計・開発：Claude (Anthropic)<br>
+    プロデュース：BTLT Project
+  </div>
+</footer>
+
+<script>
+function closeManual() {
+  document.getElementById('manualOverlay').style.display='none';
+}
+// NAVハイライト
+(function(){
+  const overlay = document.getElementById('manualOverlay');
+  const links = overlay.querySelectorAll('.mn-nav a');
+  overlay.addEventListener('scroll', function(){
+    let cur='';
+    overlay.querySelectorAll('[id^="mn-"]').forEach(s=>{
+      if(overlay.scrollTop >= s.offsetTop - 100) cur='#'+s.id;
+    });
+    links.forEach(a=> a.classList.toggle('mn-active', a.getAttribute('href')===cur));
+  }, {passive:true});
+  // アンカーリンク：overlay内スクロール
+  links.forEach(a=>{
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      const target = overlay.querySelector(this.getAttribute('href'));
+      if(target) overlay.scrollTo({top:target.offsetTop-50, behavior:'smooth'});
+    });
+  });
+})();
+</script>
+</div>
+
 </body>
 </html>
-
