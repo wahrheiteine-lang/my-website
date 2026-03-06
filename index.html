@@ -522,7 +522,7 @@
     flex:1; display:flex; flex-direction:column;
     align-items:center; justify-content:center;
     padding:16px 24px;
-    gap:4px;
+    gap:4px; overflow:hidden; width:100%;
   }
   .board-lap-num {
     font-family:'Roboto',sans-serif; font-weight:900;
@@ -635,6 +635,22 @@
   .board-hold-bar { height:100%; background:var(--hot); width:0%; border-radius:1px; }
 
   /* 横向き推奨時の最適化 */
+  /* 縦向き：board-time をwidth内に収める */
+  @media (orientation:portrait) {
+    .board-time {
+      font-size: clamp(40px,13vw,58px);
+      letter-spacing: -2px;
+      white-space: nowrap;
+      width: 100%;
+      text-align: center;
+      overflow: hidden;
+    }
+    .board-lap-num {
+      font-size: clamp(14px,3.5vw,24px);
+      letter-spacing: 3px;
+    }
+  }
+
   @media (orientation:landscape) {
     /* 横向き：body幅制限を解除して全画面使用 */
     body {
@@ -938,9 +954,9 @@
   <div class="settings-section">
     <div class="settings-label">BOARD DELAY TIME</div>
     <div class="option-group">
-      <button class="opt-btn" data-delay="0"  onclick="selectDelay(this)">OFF</button>
+      <button class="opt-btn selected" data-delay="0"  onclick="selectDelay(this)">OFF</button>
       <button class="opt-btn" data-delay="3"  onclick="selectDelay(this)">3s</button>
-      <button class="opt-btn selected" data-delay="5"  onclick="selectDelay(this)">5s</button>
+      <button class="opt-btn" data-delay="5"  onclick="selectDelay(this)">5s</button>
       <button class="opt-btn" data-delay="10" onclick="selectDelay(this)">10s</button>
       <button class="opt-btn" data-delay="15" onclick="selectDelay(this)">15s</button>
       <button class="opt-btn" data-delay="20" onclick="selectDelay(this)">20s</button>
@@ -982,11 +998,13 @@
         <span class="delta-mode-name" id="deltaModeLabel">目標タイム差</span>
         <div class="target-wrap" id="targetRow">
           <span class="delta-target-label">目標</span>
-          <input class="target-input" id="targetInput" value="0:00.000"
-                 inputmode="decimal" autocomplete="off" autocorrect="off"
+          <input class="target-input" id="targetInput" value="0:00"
+                 inputmode="numeric" autocomplete="off" autocorrect="off"
+                 maxlength="5"
                  onclick="event.stopPropagation()"
                  onfocus="this.select()"
-                 onchange="updateTarget()">
+                 onchange="updateTarget()"
+                 placeholder="例: 2:13">
         </div>
         <span class="delta-hint">◀ スワイプ ▶</span>
       </div>
@@ -1406,7 +1424,7 @@ function switchMode(mode) {
 // 現在どちらのモードでボードを使うか判定
 function getBoardSourceMode() {
   // timerRunning中ならtimer、それ以外はlap
-  return (seqRunning || document.getElementById('timerDisplay').value !== '00:00' && document.getElementById('timerDisplay').value !== '')
+  return (seqRunning || document.getElementById('timerDisplay').value !== '' && document.getElementById('timerDisplay').value !== '00:00')
     ? 'timer' : 'lap';
 }
 
@@ -1459,14 +1477,43 @@ function swipeEnd(e) {
 // ===================== LAP STOPWATCH =====================
 let lapRunning=false, holdFreezeMs=null, lapStartTime=0, laps=[], lapRaf;
 let holdTimer=null, isHolding=false;
-let targetMs=parseTimeStr('0:00.000');
+let targetMs=parseTimeStr('0:00');
 
 function parseTimeStr(s) {
   if(!s) return 0; s=s.trim();
   if(s.includes(':')){ const[m,sec]=s.split(':'); return(parseInt(m)*60+parseFloat(sec||0))*1000; }
-  return parseFloat(s)*1000;
+  // コロンなし数字 → MMSS形式として解釈（例: "130"→1:30, "2000"→20:00）
+  const n=parseInt(s)||0;
+  return (Math.floor(n/100)*60+(n%100))*1000;
 }
-function updateTarget() { targetMs=parseTimeStr(document.getElementById('targetInput').value); renderLaps(); }
+function updateTarget() {
+  const inp=document.getElementById('targetInput');
+  if(inp.value && !inp.value.includes(':')) {
+    const n=parseInt(inp.value)||0;
+    const mm=Math.min(99,Math.floor(n/100));
+    const ss=Math.min(59,n%100);
+    inp.value=`${mm}:${String(ss).padStart(2,'0')}`;
+  }
+  targetMs=parseTimeStr(inp.value); renderLaps();
+}
+
+// SEQセグメント時間: 入力後にMM:SS形式に整形して返す
+function fmtSeqTime(s) {
+  if(!s) return '0:00';
+  s=s.trim();
+  if(s.includes(':')) {
+    // コロンあり → そのまま（範囲チェックのみ）
+    const[m,sec]=s.split(':');
+    const mm=Math.min(99,Math.abs(parseInt(m)||0));
+    const ss=Math.min(59,Math.abs(parseInt(sec)||0));
+    return `${mm}:${String(ss).padStart(2,'0')}`;
+  }
+  // コロンなし → MMSS解釈してコロン付きに変換
+  const n=parseInt(s)||0;
+  const mm=Math.min(99,Math.floor(n/100));
+  const ss=Math.min(59,n%100);
+  return `${mm}:${String(ss).padStart(2,'0')}`;
+}
 
 function formatMs(ms) {
   if(ms<0) ms=0;
@@ -1783,8 +1830,10 @@ function renderSeqList() {
       <div class="seq-num">${i+1}</div>
       <input class="seq-name-input" value="${item.name}" placeholder="セグメント${i+1}"
              onchange="seqItems[${i}].name=this.value" onclick="event.stopPropagation()">
-      <input class="seq-time-input" value="${item.time}" placeholder="0:00" inputmode="numeric"
-             onchange="seqItems[${i}].time=this.value" onclick="event.stopPropagation()" onfocus="setTimeout(()=>this.select(),50)">
+      <input class="seq-time-input" value="${item.time}" placeholder="例: 1:30" inputmode="numeric"
+             maxlength="5"
+             onchange="seqItems[${i}].time=fmtSeqTime(this.value);this.value=seqItems[${i}].time"
+             onclick="event.stopPropagation()" onfocus="setTimeout(()=>this.select(),50)">
       <button class="seq-delete" onclick="removeSeqItem(${i})">✕</button>
     </div>`;
   }).join('');
@@ -2232,7 +2281,7 @@ function applyBoardLapData(d) {
 // ===================== BOARD MODE =====================
 let boardHoldTimer    = null;
 let boardHolding      = false;
-let boardDelaySeconds = 5;     // デフォルト5秒
+let boardDelaySeconds = 0;     // デフォルトOFF
 let boardDelayTimer   = null;
 let boardCtrlHintTimer = null;
 
